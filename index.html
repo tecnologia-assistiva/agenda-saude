@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Agende consultas numa UBS fictícia. Projeto acadêmico de acessibilidade com dados fictícios."
+    />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <title>Agenda Saúde</title>
+    <script>
+      // Aplica as preferências antes da primeira pintura, para a página não piscar no tema errado.
+      // Usa a mesma chave e o mesmo formato de src/stores/configuracoes.ts. A store aplica de novo ao iniciar.
+      (function () {
+        var raiz = document.documentElement
+        var p = {}
+        try {
+          var salvo = JSON.parse(localStorage.getItem('agenda-saude:configuracoes') || 'null')
+          if (salvo && salvo.versao === 1 && salvo.dados) p = salvo.dados
+        } catch (e) {}
+        function midia(consulta) {
+          return !!(window.matchMedia && window.matchMedia(consulta).matches)
+        }
+        var temas = ['claro', 'escuro', 'alto-contraste']
+        var tema =
+          temas.indexOf(p.tema) >= 0
+            ? p.tema
+            : midia('(prefers-contrast: more)')
+              ? 'alto-contraste'
+              : midia('(prefers-color-scheme: dark)')
+                ? 'escuro'
+                : 'claro'
+        var movimentoReduzido =
+          typeof p.reduzirMovimento === 'boolean'
+            ? p.reduzirMovimento
+            : midia('(prefers-reduced-motion: reduce)')
+        raiz.setAttribute('data-tema', tema)
+        raiz.setAttribute('data-espacamento', p.espacamentoAmpliado === true ? 'ampliado' : 'padrao')
+        raiz.setAttribute('data-fonte', p.fonteLegivel === true ? 'legivel' : 'padrao')
+        raiz.setAttribute('data-movimento', movimentoReduzido ? 'reduzido' : 'padrao')
+        if ([100, 125, 150, 175, 200].indexOf(p.tamanhoTexto) >= 0) {
+          raiz.style.fontSize = p.tamanhoTexto + '%'
+        }
+      })()
+    </script>
+  </head>
+  <body>
+    <noscript>
+      <p>Para usar a Agenda Saúde, ative o JavaScript no seu navegador.</p>
+    </noscript>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
