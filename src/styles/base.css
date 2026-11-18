@@ -348,6 +348,132 @@ legend > h3 {
   }
 }
 
+/* ---------- Etapas: legenda "Etapa X de 5" dentro do h1 ----------
+ * Na tela estreita aparece (o indicador de etapas some); na larga fica só para o leitor de tela.
+ */
+
+.legenda-etapa {
+  display: block;
+  margin-bottom: var(--espaco-1);
+  color: var(--cor-texto-suave);
+  font-size: 1.125rem;
+  font-weight: 400;
+}
+
+@media (min-width: 40em) {
+  .legenda-etapa {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
+/* ---------- Campos de texto ---------- */
+
+.campo {
+  margin-bottom: var(--espaco-6);
+}
+
+.campo__rotulo {
+  display: block;
+  margin-bottom: var(--espaco-1);
+  font-weight: 700;
+}
+
+.campo__exigencia {
+  font-weight: 400;
+}
+
+.campo__instrucao {
+  margin: 0 0 var(--espaco-2);
+  color: var(--cor-texto-suave);
+}
+
+.campo .dica-extra,
+.campo__erro {
+  margin: 0 0 var(--espaco-2);
+}
+
+.campo__erro {
+  color: var(--cor-erro);
+  font-weight: 700;
+}
+
+.campo__entrada {
+  display: block;
+  width: 100%;
+  min-height: var(--alvo-minimo);
+  padding: var(--espaco-2);
+  border: 0.125rem solid var(--cor-borda);
+  border-radius: 0;
+  background-color: var(--cor-fundo);
+  color: var(--cor-texto);
+  /* Pelo menos 16 px: o iPhone não dá zoom ao focar. */
+  font-size: max(1rem, 16px);
+}
+
+.campo__entrada--curta {
+  max-width: 11em;
+}
+
+.campo__entrada--media {
+  max-width: 17em;
+}
+
+.campo__entrada--longa {
+  max-width: 30em;
+}
+
+/* Foco do campo: contorno amarelo por fora + borda escura grossa por dentro. */
+.campo__entrada:focus {
+  outline: var(--contorno-foco) solid var(--cor-foco-fundo);
+  outline-offset: 0;
+  box-shadow: inset 0 0 0 0.125rem var(--cor-foco-barra);
+}
+
+.campo--erro .campo__entrada {
+  border-color: var(--cor-erro);
+}
+
+/* ---------- Resumo de erros ---------- */
+
+.resumo-erros {
+  margin-bottom: var(--espaco-6);
+  padding: var(--espaco-4);
+  border: 0.25rem solid var(--cor-erro);
+}
+
+.resumo-erros:focus {
+  outline: var(--contorno-foco) solid var(--cor-foco-fundo);
+  outline-offset: 0;
+}
+
+.resumo-erros__titulo {
+  margin: 0 0 var(--espaco-3);
+  font-size: 1.375rem;
+}
+
+.resumo-erros__lista {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.resumo-erros__lista a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--alvo-minimo);
+  color: var(--cor-erro);
+  font-weight: 700;
+}
+
+.resumo-erros__lista a:focus-visible {
+  color: var(--cor-foco-texto);
+}
+
 /* ---------- Texto de atenção ---------- */
 
 .texto-atencao {

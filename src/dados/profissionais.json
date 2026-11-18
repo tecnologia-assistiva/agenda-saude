@@ -1,0 +1,11 @@
+[
+  { "id": "helena-duarte", "nome": "Helena Duarte", "especialidadeId": "clinica-geral" },
+  { "id": "marcos-ribeiro", "nome": "Marcos Ribeiro", "especialidadeId": "clinica-geral" },
+  { "id": "lucia-fernandes", "nome": "Lúcia Fernandes", "especialidadeId": "pediatria" },
+  { "id": "paulo-nogueira", "nome": "Paulo Nogueira", "especialidadeId": "pediatria" },
+  { "id": "beatriz-campos", "nome": "Beatriz Campos", "especialidadeId": "ginecologia" },
+  { "id": "rafael-teixeira", "nome": "Rafael Teixeira", "especialidadeId": "dentista" },
+  { "id": "camila-rocha", "nome": "Camila Rocha", "especialidadeId": "dentista" },
+  { "id": "joana-martins", "nome": "Joana Martins", "especialidadeId": "enfermagem" },
+  { "id": "tiago-alves", "nome": "Tiago Alves", "especialidadeId": "enfermagem" }
+]

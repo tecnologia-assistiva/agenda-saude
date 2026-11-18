@@ -1,0 +1,7 @@
+[
+  { "id": "clinica-geral", "nome": "Clínica geral", "descricao": "Consultas de rotina para adultos." },
+  { "id": "pediatria", "nome": "Pediatria", "descricao": "Para crianças e adolescentes." },
+  { "id": "ginecologia", "nome": "Ginecologia", "descricao": "Saúde da mulher e pré-natal." },
+  { "id": "dentista", "nome": "Dentista" },
+  { "id": "enfermagem", "nome": "Enfermagem", "descricao": "Curativos, pressão e orientações." }
+]
