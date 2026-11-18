@@ -36,7 +36,7 @@ const idInstrucao = `${id}-instrucao`
       <component :is="`h${props.nivelTitulo}`" v-if="props.nivelTitulo">{{ props.legenda }}</component>
       <template v-else>{{ props.legenda }}</template>
     </legend>
-    <p v-if="props.instrucao" :id="idInstrucao" class="grupo-opcoes__instrucao">{{ props.instrucao }}</p>
+    <p v-if="props.instrucao" :id="idInstrucao" class="grupo-opcoes__instrucao texto-suave">{{ props.instrucao }}</p>
     <div class="lista-opcoes" :class="{ 'lista-opcoes--linha': props.emLinha }">
       <label v-for="opcao in props.opcoes" :key="opcao.valor" class="opcao">
         <input v-model="modelo" type="radio" :name="props.nome" :value="opcao.valor" />
@@ -51,6 +51,7 @@ const idInstrucao = `${id}-instrucao`
 
 <style scoped>
 .grupo-opcoes__instrucao {
-  margin-top: calc(-1 * var(--espaco-2));
+  margin-top: calc(-1 * var(--espaco-1));
+  margin-bottom: var(--espaco-3);
 }
 </style>

@@ -87,7 +87,7 @@ describe('tela de configurações', () => {
     })
     await wrapper.get('input[name="tema"][value="escuro"]').setValue(true)
     expect(raiz.dataset.tema).toBe('escuro')
-    expect(wrapper.text()).toContain('Seu navegador não deixou salvar as configurações.')
+    expect(wrapper.text()).toContain('Atenção: seu navegador não deixou salvar as configurações.')
     await expect.poll(() => alerta.text()).toContain('Não foi possível salvar as configurações')
   })
 })

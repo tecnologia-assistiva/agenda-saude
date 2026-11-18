@@ -1,7 +1,7 @@
 <script setup lang="ts">
 /*
- * Barra de acessibilidade no padrão eMAG. É o primeiro conteúdo da página, então o primeiro Tab
- * cai em "Ir para o conteúdo". Numeração dos atalhos pela convenção do eMAG:
+ * Barra de acessibilidade no padrão eMAG. É o primeiro conteúdo focável da página, então o
+ * primeiro Tab cai em "Ir para o conteúdo". Numeração dos atalhos pela convenção do eMAG:
  * 1 conteúdo, 2 menu, 3 busca (reservado: este site não tem busca), 4 rodapé.
  * Os links de pulo são âncoras nativas; os destinos têm tabindex="-1" para receber o foco.
  */
@@ -47,13 +47,13 @@ function alternarAltoContraste() {
           <RouterLink to="/acessibilidade">Acessibilidade</RouterLink>
         </li>
         <li>
+          <!-- Ligado: o ✓ mostra o estado na tela; o leitor de tela recebe o aria-pressed. -->
           <button
             type="button"
-            class="barra-acessibilidade__botao"
+            class="botao botao--secundario barra-acessibilidade__botao"
             :aria-pressed="altoContrasteAtivo ? 'true' : 'false'"
             @click="alternarAltoContraste"
           >
-            <Icone nome="contraste" />
             Alto contraste
             <Icone v-if="altoContrasteAtivo" nome="check" />
           </button>
@@ -64,26 +64,26 @@ function alternarAltoContraste() {
 </template>
 
 <style scoped>
+/* Faixa fina: texto em 1rem (16 px no padrão), mesmo quando o corpo cresce no desktop. */
 .barra-acessibilidade {
-  /* Os controles da barra usam as cores dela, inclusive o contorno de foco. */
-  --cor-foco: var(--cor-barra-foco);
-  --cor-link: var(--cor-barra-texto);
-  background-color: var(--cor-barra-fundo);
-  color: var(--cor-barra-texto);
-  border-bottom: 0.0625rem solid var(--cor-barra-texto);
+  border-bottom: 0.0625rem solid var(--cor-separador);
+  font-size: 1rem;
 }
 
 .barra-acessibilidade__conteudo {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   justify-content: space-between;
   gap: 0 var(--espaco-4);
+  padding-block: var(--espaco-1);
 }
 
 .barra-acessibilidade__lista {
   display: flex;
   flex-wrap: wrap;
-  gap: 0 var(--espaco-3);
+  align-items: center;
+  gap: 0 var(--espaco-4);
   margin: 0;
   padding: 0;
   list-style: none;
@@ -93,27 +93,15 @@ function alternarAltoContraste() {
   margin: 0;
 }
 
-.barra-acessibilidade a,
-.barra-acessibilidade__botao {
+.barra-acessibilidade a {
   display: inline-flex;
   align-items: center;
-  gap: var(--espaco-2);
   min-height: var(--alvo-minimo);
-  padding: var(--espaco-1) var(--espaco-2);
-  color: var(--cor-barra-texto);
 }
 
 .barra-acessibilidade__botao {
-  border: 0.125rem solid var(--cor-barra-texto);
-  border-radius: var(--raio);
-  background-color: transparent;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-/* Ligado: cores invertidas + ícone de marcado (o estado não depende só de cor). */
-.barra-acessibilidade__botao[aria-pressed="true"] {
-  background-color: var(--cor-barra-texto);
-  color: var(--cor-barra-fundo);
+  gap: var(--espaco-2);
+  padding-inline: var(--espaco-3);
+  font-weight: 400;
 }
 </style>

@@ -6,7 +6,7 @@ const ENDERECO_CHAMADOS = 'https://github.com/tecnologia-assistiva/agenda-saude/
 </script>
 
 <template>
-  <div class="acessibilidade">
+  <div class="coluna-leitura">
     <TituloPagina>Sobre a acessibilidade</TituloPagina>
     <p>
       A Agenda Saúde foi feita desde o começo para que todas as pessoas consigam usar: quem usa leitor de
@@ -173,8 +173,3 @@ const ENDERECO_CHAMADOS = 'https://github.com/tecnologia-assistiva/agenda-saude/
   </div>
 </template>
 
-<style scoped>
-.acessibilidade table {
-  max-width: 40rem;
-}
-</style>

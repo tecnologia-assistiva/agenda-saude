@@ -1,81 +1,79 @@
 /*
- * Tokens de cor dos 3 temas. Regras:
- * - só valores hexadecimais (o teste tests/unit/contraste.spec.ts calcula o contraste de cada par);
+ * Tokens de cor dos 3 temas. O claro é o design principal; escuro e alto contraste derivam dele.
+ * Regras:
+ * - só valores hexadecimais (tests/unit/contraste.spec.ts calcula o contraste de cada par);
  * - todo tema define os mesmos tokens;
  * - componentes usam só var(--cor-...), nunca uma cor direta.
- * Texto: pelo menos 4,5:1. Foco, bordas de campos e ícones: pelo menos 3:1.
+ * Texto: pelo menos 4,5:1. Bordas de controles: pelo menos 3:1.
+ * Foco: fundo amarelo + barra escura; em qualquer fundo, uma das duas tem pelo menos 3:1.
  */
 
 :root,
 :root[data-tema="claro"] {
   color-scheme: light;
   --cor-fundo: #ffffff;
-  --cor-superficie: #f1f4f8;
-  --cor-destaque-fundo: #e3eefa;
-  --cor-texto: #1a1d21;
-  --cor-texto-suave: #4a5361;
-  --cor-link: #0a4f96;
-  --cor-primaria: #0a4f96;
-  --cor-primaria-forte: #073a70;
-  --cor-texto-sobre-primaria: #ffffff;
-  --cor-borda: #687482;
-  --cor-foco: #8a1c7c;
+  --cor-superficie: #f3f3f3;
+  --cor-texto: #1b1b1b;
+  --cor-texto-suave: #50575e;
+  --cor-link: #1d4370;
+  /* Cor institucional da UBS: faixa do cabeçalho e botão principal. */
+  --cor-institucional: #1d4370;
+  --cor-texto-institucional: #ffffff;
+  --cor-botao-fundo: #1d4370;
+  --cor-botao-fundo-hover: #132d4c;
+  --cor-botao-texto: #ffffff;
+  --cor-botao-borda: #1d4370;
+  --cor-borda: #5f666d;
+  /* Decorativo (linhas de separação): sem mínimo de contraste. */
+  --cor-separador: #b1b4b6;
+  --cor-foco-fundo: #ffd60a;
+  --cor-foco-texto: #111111;
+  --cor-foco-barra: #111111;
   --cor-erro: #b3261e;
-  --cor-erro-fundo: #fdeceb;
   --cor-sucesso: #1d6b38;
-  --cor-sucesso-fundo: #e6f4ea;
-  --cor-aviso-fundo: #fff5d9;
-  --cor-aviso-borda: #8a6100;
-  --cor-barra-fundo: #1a1d21;
-  --cor-barra-texto: #ffffff;
-  --cor-barra-foco: #ffd24d;
 }
 
 :root[data-tema="escuro"] {
   color-scheme: dark;
-  --cor-fundo: #121417;
-  --cor-superficie: #1e2227;
-  --cor-destaque-fundo: #1b2d42;
-  --cor-texto: #eef1f4;
-  --cor-texto-suave: #b9c1cc;
-  --cor-link: #8cc4ff;
-  --cor-primaria: #8cc4ff;
-  --cor-primaria-forte: #b5d9ff;
-  --cor-texto-sobre-primaria: #0b1a2b;
-  --cor-borda: #8a95a3;
-  --cor-foco: #ffd24d;
+  --cor-fundo: #141618;
+  --cor-superficie: #202326;
+  --cor-texto: #f2f2f2;
+  --cor-texto-suave: #b8bdc2;
+  --cor-link: #9cc3f0;
+  --cor-institucional: #1d4370;
+  --cor-texto-institucional: #ffffff;
+  --cor-botao-fundo: #9cc3f0;
+  --cor-botao-fundo-hover: #c4dcf5;
+  --cor-botao-texto: #0d1b2a;
+  --cor-botao-borda: #9cc3f0;
+  --cor-borda: #8d949b;
+  --cor-separador: #3d4247;
+  --cor-foco-fundo: #ffd60a;
+  --cor-foco-texto: #111111;
+  --cor-foco-barra: #111111;
   --cor-erro: #ff9b93;
-  --cor-erro-fundo: #3b1916;
   --cor-sucesso: #7fd99a;
-  --cor-sucesso-fundo: #143320;
-  --cor-aviso-fundo: #302710;
-  --cor-aviso-borda: #d6a635;
-  --cor-barra-fundo: #000000;
-  --cor-barra-texto: #eef1f4;
-  --cor-barra-foco: #ffd24d;
 }
 
-/* Preto e amarelo. Superfícies e destaques também são pretos: as bordas separam os blocos. */
+/* Preto e amarelo. Os blocos se separam por linhas amarelas; botões são contornados. */
 :root[data-tema="alto-contraste"] {
   color-scheme: dark;
   --cor-fundo: #000000;
   --cor-superficie: #000000;
-  --cor-destaque-fundo: #000000;
   --cor-texto: #ffff00;
   --cor-texto-suave: #ffff00;
   --cor-link: #ffff00;
-  --cor-primaria: #ffff00;
-  --cor-primaria-forte: #ffffff;
-  --cor-texto-sobre-primaria: #000000;
+  --cor-institucional: #000000;
+  --cor-texto-institucional: #ffff00;
+  --cor-botao-fundo: #000000;
+  --cor-botao-fundo-hover: #262626;
+  --cor-botao-texto: #ffff00;
+  --cor-botao-borda: #ffff00;
   --cor-borda: #ffff00;
-  --cor-foco: #ffffff;
+  --cor-separador: #ffff00;
+  --cor-foco-fundo: #ffff00;
+  --cor-foco-texto: #000000;
+  --cor-foco-barra: #000000;
   --cor-erro: #ffffff;
-  --cor-erro-fundo: #000000;
   --cor-sucesso: #ffff00;
-  --cor-sucesso-fundo: #000000;
-  --cor-aviso-fundo: #000000;
-  --cor-aviso-borda: #ffff00;
-  --cor-barra-fundo: #000000;
-  --cor-barra-texto: #ffff00;
-  --cor-barra-foco: #ffffff;
 }

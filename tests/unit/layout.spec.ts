@@ -37,10 +37,26 @@ describe('layout: estrutura', () => {
     expect(document.querySelectorAll('[role="alert"]')).toHaveLength(1)
   })
 
-  it('o aviso de projeto acadêmico aparece no rodapé e no início', async () => {
+  it('o aviso de demonstração fica numa faixa no topo e numa linha no rodapé, fora do conteúdo', async () => {
     await montarApp('/')
-    expect(document.querySelector('footer')?.textContent).toContain('Projeto acadêmico com dados fictícios')
-    expect(document.querySelector('main')?.textContent).toContain('Projeto acadêmico com dados fictícios')
+    expect(document.querySelector('header')?.textContent).toContain(
+      'Site de demonstração: projeto acadêmico com dados fictícios.',
+    )
+    expect(document.querySelector('footer')?.textContent).toContain('Site de demonstração')
+    expect(document.querySelector('main')?.textContent).not.toContain('demonstração')
+  })
+
+  it('o menu fica logo abaixo da faixa institucional, dentro do cabeçalho', async () => {
+    await montarApp('/')
+    expect(document.querySelector('header nav#menu')).not.toBeNull()
+  })
+
+  it('a tela Início tem um único botão principal; o resto são links', async () => {
+    await montarApp('/')
+    const principais = document.querySelectorAll('main .botao:not(.botao--secundario)')
+    expect([...principais].map((b) => b.textContent?.trim())).toEqual(['Começar agendamento'])
+    const link = [...document.querySelectorAll('main a')].find((a) => a.textContent?.trim() === 'Ver minhas consultas')
+    expect(link?.classList.contains('botao')).toBe(false)
   })
 })
 
@@ -102,11 +118,14 @@ describe('cabeçalho', () => {
     expect(link?.textContent?.trim()).toBe('Configurações')
   })
 
-  it('ícones são decorativos', async () => {
-    await montarApp('/')
-    for (const svg of document.querySelectorAll('svg')) {
-      expect(svg.getAttribute('aria-hidden')).toBe('true')
-      expect(svg.getAttribute('focusable')).toBe('false')
-    }
+  it('sem ícones decorativos; o único ícone (✓ do alto contraste) fica escondido do leitor', async () => {
+    const { wrapper } = await montarApp('/')
+    expect(document.querySelectorAll('svg')).toHaveLength(0)
+    await wrapper.get('button[aria-pressed]').trigger('click')
+    const icones = document.querySelectorAll('svg')
+    expect(icones).toHaveLength(1)
+    expect(icones[0]?.closest('button[aria-pressed="true"]')).not.toBeNull()
+    expect(icones[0]?.getAttribute('aria-hidden')).toBe('true')
+    expect(icones[0]?.getAttribute('focusable')).toBe('false')
   })
 })

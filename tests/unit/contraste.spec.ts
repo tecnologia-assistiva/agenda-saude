@@ -5,54 +5,47 @@ import { hexParaRgb, lerTokensDeCor, razaoContraste } from '@/utils/contraste'
 
 /*
  * Confere o contraste dos tokens de cor de cada tema (WCAG 1.4.3 e 1.4.11).
- * Cada par é [frente, fundo, mínimo]. Ao criar um token novo, inclua os pares em que ele é usado:
- * o último teste falha se algum token ficar sem par.
+ * Cada par é [frente, fundo, mínimo]. Ao criar um token novo, inclua os pares em que ele é usado
+ * (ou marque-o como decorativo): o teste "todo token..." falha se algum ficar de fora.
  */
 const TEXTO = 4.5
 const NAO_TEXTO = 3
 
 const PARES: [string, string, number][] = [
-  // Texto comum
+  // Texto comum e texto de apoio
   ['cor-texto', 'cor-fundo', TEXTO],
   ['cor-texto', 'cor-superficie', TEXTO],
-  ['cor-texto', 'cor-destaque-fundo', TEXTO],
-  ['cor-texto', 'cor-aviso-fundo', TEXTO],
-  ['cor-texto', 'cor-erro-fundo', TEXTO],
-  ['cor-texto', 'cor-sucesso-fundo', TEXTO],
   ['cor-texto-suave', 'cor-fundo', TEXTO],
   ['cor-texto-suave', 'cor-superficie', TEXTO],
-  ['cor-texto-suave', 'cor-destaque-fundo', TEXTO],
-  // Links e botões
+  // Links (também a barra da página atual no menu)
   ['cor-link', 'cor-fundo', TEXTO],
   ['cor-link', 'cor-superficie', TEXTO],
-  ['cor-link', 'cor-destaque-fundo', TEXTO],
-  ['cor-link', 'cor-aviso-fundo', TEXTO],
-  ['cor-texto-sobre-primaria', 'cor-primaria', TEXTO],
-  ['cor-texto-sobre-primaria', 'cor-primaria-forte', TEXTO],
+  // Faixa institucional do cabeçalho
+  ['cor-texto-institucional', 'cor-institucional', TEXTO],
+  // Botão principal
+  ['cor-botao-texto', 'cor-botao-fundo', TEXTO],
+  ['cor-botao-texto', 'cor-botao-fundo-hover', TEXTO],
+  ['cor-botao-borda', 'cor-fundo', NAO_TEXTO],
+  // Texto com foco (fundo amarelo)
+  ['cor-foco-texto', 'cor-foco-fundo', TEXTO],
   // Mensagens
   ['cor-erro', 'cor-fundo', TEXTO],
   ['cor-erro', 'cor-superficie', TEXTO],
-  ['cor-erro', 'cor-erro-fundo', TEXTO],
   ['cor-sucesso', 'cor-fundo', TEXTO],
-  ['cor-sucesso', 'cor-sucesso-fundo', TEXTO],
-  // Barra de acessibilidade
-  ['cor-barra-texto', 'cor-barra-fundo', TEXTO],
-  ['cor-barra-foco', 'cor-barra-fundo', NAO_TEXTO],
-  // Bordas de campos, botões e opções marcadas
+  // Bordas de campos e do botão secundário
   ['cor-borda', 'cor-fundo', NAO_TEXTO],
   ['cor-borda', 'cor-superficie', NAO_TEXTO],
-  ['cor-borda', 'cor-destaque-fundo', NAO_TEXTO],
-  ['cor-primaria', 'cor-fundo', NAO_TEXTO],
-  ['cor-primaria', 'cor-superficie', NAO_TEXTO],
-  ['cor-aviso-borda', 'cor-aviso-fundo', NAO_TEXTO],
-  ['cor-aviso-borda', 'cor-fundo', NAO_TEXTO],
-  // Contorno de foco: fica afastado do elemento (outline-offset), sobre o fundo onde ele está
-  ['cor-foco', 'cor-fundo', NAO_TEXTO],
-  ['cor-foco', 'cor-superficie', NAO_TEXTO],
-  ['cor-foco', 'cor-destaque-fundo', NAO_TEXTO],
-  ['cor-foco', 'cor-aviso-fundo', NAO_TEXTO],
-  ['cor-foco', 'cor-erro-fundo', NAO_TEXTO],
 ]
+
+/*
+ * Foco em duas cores (fundo amarelo + barra escura). Em cada fundo onde pode haver um elemento
+ * focado, pelo menos uma das duas precisa ter 3:1: o amarelo nos fundos escuros, a barra nos claros.
+ */
+const FUNDOS_COM_FOCO = ['cor-fundo', 'cor-superficie', 'cor-institucional']
+const TOKENS_DO_FOCO = ['cor-foco-fundo', 'cor-foco-barra']
+
+/** Linhas de separação: só enfeitam, não identificam nenhum controle (sem mínimo). */
+const DECORATIVOS = ['cor-separador']
 
 // Lido do disco: no Vitest, arquivos .css importados (mesmo com ?raw) viram texto vazio.
 const tokensCss = readFileSync(resolve(process.cwd(), 'src/styles/tokens.css'), 'utf8')
@@ -95,8 +88,13 @@ describe('tokens de cor (styles/tokens.css)', () => {
     }
   })
 
-  it('todo token aparece em pelo menos um par conferido', () => {
-    const usados = new Set(PARES.flatMap(([frente, fundo]) => [frente, fundo]))
+  it('todo token aparece em pelo menos um par conferido (ou é decorativo)', () => {
+    const usados = new Set([
+      ...PARES.flatMap(([frente, fundo]) => [frente, fundo]),
+      ...FUNDOS_COM_FOCO,
+      ...TOKENS_DO_FOCO,
+      ...DECORATIVOS,
+    ])
     const semPar = Object.keys(temas.claro ?? {}).filter((nome) => !usados.has(nome))
     expect(semPar).toEqual([])
   })
@@ -110,6 +108,19 @@ describe('tokens de cor (styles/tokens.css)', () => {
       expect(corFundo, `--${fundo} não existe`).toBeDefined()
       const razao = razaoContraste(corFrente as string, corFundo as string)
       expect(razao, `${corFrente} sobre ${corFundo} = ${razao.toFixed(2)}:1`).toBeGreaterThanOrEqual(minimo)
+    })
+
+    it.each(FUNDOS_COM_FOCO)('o foco aparece sobre --%s (amarelo ou barra com 3:1)', (fundo) => {
+      const tokens = temas[tema] ?? {}
+      const corFundo = tokens[fundo] as string
+      const [amarelo, barra] = TOKENS_DO_FOCO.map((t) => razaoContraste(tokens[t] as string, corFundo)) as [
+        number,
+        number,
+      ]
+      expect(
+        Math.max(amarelo, barra),
+        `amarelo ${amarelo.toFixed(2)}:1, barra ${barra.toFixed(2)}:1 sobre ${corFundo}`,
+      ).toBeGreaterThanOrEqual(NAO_TEXTO)
     })
   })
 })
