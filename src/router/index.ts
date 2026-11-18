@@ -1,12 +1,14 @@
 import {
   createRouter,
   createWebHistory,
+  type RouteComponent,
   type RouteRecordRaw,
   type RouterHistory,
   type RouterScrollBehavior,
 } from 'vue-router'
 import InicioView from '@/views/InicioView.vue'
 import { instalarFocoNaTrocaDeRota } from './foco-rota'
+import { ETAPAS, caminhoDaPrimeiraEtapaIncompleta, instalarGuardasDoAgendamento, tituloDaEtapa } from './etapas'
 
 declare module 'vue-router' {
   interface RouteMeta {
@@ -17,8 +19,32 @@ declare module 'vue-router' {
   }
 }
 
+const EtapaPendenteView = () => import('@/views/agendar/EtapaPendenteView.vue')
+
+/** Tela de cada etapa. As etapas 3 a 5 ganham a tela própria nas próximas etapas do projeto. */
+const TELAS_DAS_ETAPAS: Record<number, () => Promise<RouteComponent>> = {
+  1: () => import('@/views/agendar/EtapaDadosView.vue'),
+  2: () => import('@/views/agendar/EtapaAtendimentoView.vue'),
+  3: EtapaPendenteView,
+  4: EtapaPendenteView,
+  5: EtapaPendenteView,
+}
+
 export const rotas: RouteRecordRaw[] = [
   { path: '/', name: 'inicio', component: InicioView, meta: { titulo: 'Início' } },
+  {
+    path: '/agendar',
+    component: () => import('@/views/AgendarLayout.vue'),
+    children: [
+      // "/agendar" sozinho leva à primeira etapa que falta completar.
+      { path: '', name: 'agendar', redirect: () => caminhoDaPrimeiraEtapaIncompleta() },
+      ...ETAPAS.map((e) => ({
+        path: e.caminho.replace('/agendar/', ''),
+        component: TELAS_DAS_ETAPAS[e.numero] as () => Promise<RouteComponent>,
+        meta: { titulo: tituloDaEtapa(e.numero), etapa: e.numero },
+      })),
+    ],
+  },
   {
     path: '/configuracoes',
     name: 'configuracoes',
@@ -48,6 +74,7 @@ const rolagem: RouterScrollBehavior = (para, de, posicaoSalva) => {
 
 export function criarRouter(historico: RouterHistory = createWebHistory(import.meta.env.BASE_URL)) {
   const router = createRouter({ history: historico, routes: rotas, scrollBehavior: rolagem })
+  instalarGuardasDoAgendamento(router)
   instalarFocoNaTrocaDeRota(router)
   return router
 }

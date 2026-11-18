@@ -3,16 +3,30 @@
  * Menu principal: links simples logo abaixo da faixa institucional.
  * Destino do atalho "Ir para o menu [2]" (id="menu", tabindex="-1").
  * Sem menu escondido: os itens quebram linha em telas estreitas.
- * O RouterLink já coloca aria-current="page" no item da página atual.
+ * aria-current: "page" na página exata; "true" na seção (ex.: "Agendar consulta" em qualquer etapa).
  */
+const itens = [
+  { para: '/', texto: 'Início' },
+  { para: '/agendar', texto: 'Agendar consulta' },
+  { para: '/minhas-consultas', texto: 'Minhas consultas' },
+]
 </script>
 
 <template>
   <nav id="menu" class="menu" aria-label="Menu principal" tabindex="-1">
     <ul class="container menu__lista">
-      <li><RouterLink to="/" class="menu__link">Início</RouterLink></li>
-      <li><RouterLink to="/agendar" class="menu__link">Agendar consulta</RouterLink></li>
-      <li><RouterLink to="/minhas-consultas" class="menu__link">Minhas consultas</RouterLink></li>
+      <li v-for="item in itens" :key="item.para">
+        <RouterLink v-slot="{ href, navigate, isActive, isExactActive }" :to="item.para" custom>
+          <a
+            :href="href"
+            class="menu__link"
+            :aria-current="isExactActive ? 'page' : isActive ? 'true' : undefined"
+            @click="navigate"
+          >
+            {{ item.texto }}
+          </a>
+        </RouterLink>
+      </li>
     </ul>
   </nav>
 </template>
@@ -42,8 +56,8 @@
   border-bottom: 0.25rem solid transparent;
 }
 
-/* Página atual: negrito e barra embaixo (forma, não só cor). */
-.menu__link[aria-current="page"] {
+/* Página ou seção atual: negrito e barra embaixo (forma, não só cor). */
+.menu__link[aria-current] {
   border-bottom-color: var(--cor-link);
   font-weight: 700;
   text-decoration: none;

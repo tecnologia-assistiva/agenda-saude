@@ -108,6 +108,20 @@ describe('barra de acessibilidade (eMAG)', () => {
     }
   })
 
+  it('tela estreita: a palavra visível ("Conteúdo") está no nome acessível, que mantém "Ir para o" (2.5.3)', async () => {
+    await montarApp('/')
+    const atalhos = [...document.querySelectorAll<HTMLAnchorElement>('a.atalho')]
+    expect(atalhos.map((a) => a.querySelector('.atalho__alvo')?.textContent)).toEqual(['conteúdo', 'menu', 'rodapé'])
+    for (const atalho of atalhos) {
+      const prefixo = atalho.querySelector('.atalho__prefixo')
+      expect(prefixo?.textContent).toBe('Ir para o ')
+      // O prefixo fica só visualmente escondido (continua no DOM e no nome), nunca aria-hidden.
+      expect(prefixo?.closest('[aria-hidden]')).toBeNull()
+      const alvo = atalho.querySelector('.atalho__alvo')?.textContent ?? ''
+      expect(atalho.textContent?.toLowerCase()).toContain(alvo)
+    }
+  })
+
   it('o 3 fica reservado para a busca', async () => {
     await montarApp('/')
     expect(document.querySelector('[accesskey="3"]')).toBeNull()

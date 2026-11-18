@@ -1,10 +1,12 @@
 <script setup lang="ts" generic="T extends string | number">
 /*
  * Grupo de radios nativos: fieldset + legend, setas trocam a opção (comportamento do navegador).
- * O rótulo envolve o cartão inteiro, com pelo menos 44 px de altura.
+ * O rótulo inteiro é a área de toque, com pelo menos 44 px de altura.
  * Com `nivelTitulo`, a legenda vira também um título (h2/h3) para quem navega por títulos.
+ * Com `erro`: a mensagem fica logo depois da legenda, ligada ao grupo por aria-describedby, e cada
+ * radio recebe aria-invalid. O `id` vai no fieldset, para o link do resumo de erros.
  */
-import { useId } from 'vue'
+import { computed, useId } from 'vue'
 
 export interface Opcao<V> {
   valor: V
@@ -17,29 +19,47 @@ const props = withDefaults(
     legenda: string
     nome: string
     opcoes: Opcao<T>[]
+    id?: string
     nivelTitulo?: 2 | 3
     instrucao?: string
+    erro?: string
     emLinha?: boolean
   }>(),
-  { nivelTitulo: undefined, instrucao: undefined, emLinha: false },
+  { id: undefined, nivelTitulo: undefined, instrucao: undefined, erro: undefined, emLinha: false },
 )
 
 const modelo = defineModel<T | null>({ required: true })
 
-const id = useId()
-const idInstrucao = `${id}-instrucao`
+const idGerado = useId()
+const idBase = props.id ?? idGerado
+const idInstrucao = `${idBase}-instrucao`
+const idErro = `${idBase}-erro`
+
+const descritoPor = computed(() => {
+  const ids = [props.instrucao ? idInstrucao : null, props.erro ? idErro : null].filter(Boolean)
+  return ids.length ? ids.join(' ') : undefined
+})
 </script>
 
 <template>
-  <fieldset class="grupo-opcoes" :aria-describedby="props.instrucao ? idInstrucao : undefined">
+  <fieldset :id="props.id" class="grupo-opcoes" :class="{ 'grupo-opcoes--erro': props.erro }" :aria-describedby="descritoPor">
     <legend>
       <component :is="`h${props.nivelTitulo}`" v-if="props.nivelTitulo">{{ props.legenda }}</component>
       <template v-else>{{ props.legenda }}</template>
     </legend>
     <p v-if="props.instrucao" :id="idInstrucao" class="grupo-opcoes__instrucao texto-suave">{{ props.instrucao }}</p>
+    <p v-if="props.erro" :id="idErro" class="campo__erro">
+      <span class="visualmente-oculto">Erro: </span>{{ props.erro }}
+    </p>
     <div class="lista-opcoes" :class="{ 'lista-opcoes--linha': props.emLinha }">
       <label v-for="opcao in props.opcoes" :key="opcao.valor" class="opcao">
-        <input v-model="modelo" type="radio" :name="props.nome" :value="opcao.valor" />
+        <input
+          v-model="modelo"
+          type="radio"
+          :name="props.nome"
+          :value="opcao.valor"
+          :aria-invalid="props.erro ? 'true' : undefined"
+        />
         <span class="opcao__texto">
           <span class="opcao__rotulo">{{ opcao.rotulo }}</span>
           <span v-if="opcao.descricao" class="opcao__descricao">{{ opcao.descricao }}</span>

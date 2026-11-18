@@ -4,6 +4,8 @@
  * primeiro Tab cai em "Ir para o conteúdo". Numeração dos atalhos pela convenção do eMAG:
  * 1 conteúdo, 2 menu, 3 busca (reservado: este site não tem busca), 4 rodapé.
  * Os links de pulo são âncoras nativas; os destinos têm tabindex="-1" para receber o foco.
+ * Em tela estreita a barra fica compacta e sempre visível: o texto visível vira "Conteúdo", "Menu" e
+ * "Rodapé", e "Ir para o" continua no nome acessível (escondido só na tela), atendendo o 2.5.3.
  */
 import { computed } from 'vue'
 import { useAnunciador } from '@/composables/useAnunciador'
@@ -31,15 +33,15 @@ function alternarAltoContraste() {
       <ul class="barra-acessibilidade__lista">
         <li>
           <!-- eslint-disable-next-line vuejs-accessibility/no-access-key -- atalhos da convenção do eMAG -->
-          <a href="#conteudo" accesskey="1">Ir para o conteúdo [1]</a>
+          <a href="#conteudo" accesskey="1" class="atalho"><span><span class="atalho__prefixo">Ir para o </span><span class="atalho__alvo">conteúdo</span><span class="atalho__numero"> [1]</span></span></a>
         </li>
         <li>
           <!-- eslint-disable-next-line vuejs-accessibility/no-access-key -- atalhos da convenção do eMAG -->
-          <a href="#menu" accesskey="2">Ir para o menu [2]</a>
+          <a href="#menu" accesskey="2" class="atalho"><span><span class="atalho__prefixo">Ir para o </span><span class="atalho__alvo">menu</span><span class="atalho__numero"> [2]</span></span></a>
         </li>
         <li>
           <!-- eslint-disable-next-line vuejs-accessibility/no-access-key -- atalhos da convenção do eMAG -->
-          <a href="#rodape" accesskey="4">Ir para o rodapé [4]</a>
+          <a href="#rodape" accesskey="4" class="atalho"><span><span class="atalho__prefixo">Ir para o </span><span class="atalho__alvo">rodapé</span><span class="atalho__numero"> [4]</span></span></a>
         </li>
       </ul>
       <ul class="barra-acessibilidade__lista">
@@ -94,9 +96,41 @@ function alternarAltoContraste() {
 }
 
 .barra-acessibilidade a {
+  position: relative;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   min-height: var(--alvo-minimo);
+  min-width: var(--alvo-minimo);
+}
+
+/* As partes do texto ficam num único <span>: num link flex, cada parte viraria um item e perderia
+   os espaços entre as palavras. */
+
+/* Tela estreita: os três atalhos numa linha; "Acessibilidade" e "Alto contraste" na de baixo. */
+@media (max-width: 39.9375em) {
+  .barra-acessibilidade__conteudo {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .atalho__prefixo {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .atalho__alvo {
+    text-transform: capitalize;
+  }
+
+  /* Sem teclado físico no celular, o número do atalho não ajuda: sai da tela e do nome. */
+  .atalho__numero {
+    display: none;
+  }
 }
 
 .barra-acessibilidade__botao {
