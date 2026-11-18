@@ -1,0 +1,81 @@
+/*
+ * Tokens de cor dos 3 temas. Regras:
+ * - só valores hexadecimais (o teste tests/unit/contraste.spec.ts calcula o contraste de cada par);
+ * - todo tema define os mesmos tokens;
+ * - componentes usam só var(--cor-...), nunca uma cor direta.
+ * Texto: pelo menos 4,5:1. Foco, bordas de campos e ícones: pelo menos 3:1.
+ */
+
+:root,
+:root[data-tema="claro"] {
+  color-scheme: light;
+  --cor-fundo: #ffffff;
+  --cor-superficie: #f1f4f8;
+  --cor-destaque-fundo: #e3eefa;
+  --cor-texto: #1a1d21;
+  --cor-texto-suave: #4a5361;
+  --cor-link: #0a4f96;
+  --cor-primaria: #0a4f96;
+  --cor-primaria-forte: #073a70;
+  --cor-texto-sobre-primaria: #ffffff;
+  --cor-borda: #687482;
+  --cor-foco: #8a1c7c;
+  --cor-erro: #b3261e;
+  --cor-erro-fundo: #fdeceb;
+  --cor-sucesso: #1d6b38;
+  --cor-sucesso-fundo: #e6f4ea;
+  --cor-aviso-fundo: #fff5d9;
+  --cor-aviso-borda: #8a6100;
+  --cor-barra-fundo: #1a1d21;
+  --cor-barra-texto: #ffffff;
+  --cor-barra-foco: #ffd24d;
+}
+
+:root[data-tema="escuro"] {
+  color-scheme: dark;
+  --cor-fundo: #121417;
+  --cor-superficie: #1e2227;
+  --cor-destaque-fundo: #1b2d42;
+  --cor-texto: #eef1f4;
+  --cor-texto-suave: #b9c1cc;
+  --cor-link: #8cc4ff;
+  --cor-primaria: #8cc4ff;
+  --cor-primaria-forte: #b5d9ff;
+  --cor-texto-sobre-primaria: #0b1a2b;
+  --cor-borda: #8a95a3;
+  --cor-foco: #ffd24d;
+  --cor-erro: #ff9b93;
+  --cor-erro-fundo: #3b1916;
+  --cor-sucesso: #7fd99a;
+  --cor-sucesso-fundo: #143320;
+  --cor-aviso-fundo: #302710;
+  --cor-aviso-borda: #d6a635;
+  --cor-barra-fundo: #000000;
+  --cor-barra-texto: #eef1f4;
+  --cor-barra-foco: #ffd24d;
+}
+
+/* Preto e amarelo. Superfícies e destaques também são pretos: as bordas separam os blocos. */
+:root[data-tema="alto-contraste"] {
+  color-scheme: dark;
+  --cor-fundo: #000000;
+  --cor-superficie: #000000;
+  --cor-destaque-fundo: #000000;
+  --cor-texto: #ffff00;
+  --cor-texto-suave: #ffff00;
+  --cor-link: #ffff00;
+  --cor-primaria: #ffff00;
+  --cor-primaria-forte: #ffffff;
+  --cor-texto-sobre-primaria: #000000;
+  --cor-borda: #ffff00;
+  --cor-foco: #ffffff;
+  --cor-erro: #ffffff;
+  --cor-erro-fundo: #000000;
+  --cor-sucesso: #ffff00;
+  --cor-sucesso-fundo: #000000;
+  --cor-aviso-fundo: #000000;
+  --cor-aviso-borda: #ffff00;
+  --cor-barra-fundo: #000000;
+  --cor-barra-texto: #ffff00;
+  --cor-barra-foco: #ffffff;
+}

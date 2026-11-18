@@ -1,0 +1,362 @@
+/*
+ * Base do layout. Tudo em rem/em para acompanhar o tamanho do texto escolhido
+ * (o <html> recebe font-size em % do padrão do navegador; ver stores/configuracoes.ts).
+ * Cores só por var(--cor-...), definidas em tokens.css.
+ */
+
+:root {
+  --fonte-texto: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", Ubuntu, Arial, sans-serif;
+  --altura-linha: 1.5;
+  --altura-linha-titulo: 1.25;
+  --espaco-paragrafo: 1em;
+  --espaco-1: 0.25rem;
+  --espaco-2: 0.5rem;
+  --espaco-3: 0.75rem;
+  --espaco-4: 1rem;
+  --espaco-5: 1.5rem;
+  --espaco-6: 2rem;
+  --espaco-7: 3rem;
+  --alvo-minimo: 2.75rem; /* 44 px com o texto em 100% */
+  --raio: 0.375rem;
+  --contorno-foco: 0.1875rem;
+  --largura-maxima: 62rem;
+  --largura-texto: 70ch;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  /* Reforço do 2.4.11: o cabeçalho não é fixo, mas o foco nunca encosta na borda da tela. */
+  scroll-padding-block: var(--espaco-6);
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--cor-fundo);
+  color: var(--cor-texto);
+  font-family: var(--fonte-texto);
+  font-size: 1rem;
+  line-height: var(--altura-linha);
+  overflow-wrap: break-word;
+}
+
+#app {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+/* ---------- Tipografia ---------- */
+
+h1,
+h2,
+h3 {
+  line-height: var(--altura-linha-titulo);
+  margin: 0 0 var(--espaco-4);
+}
+
+h1 {
+  font-size: 2rem;
+}
+
+h2 {
+  font-size: 1.5rem;
+  margin-top: var(--espaco-6);
+}
+
+h3 {
+  font-size: 1.25rem;
+  margin-top: var(--espaco-5);
+}
+
+p,
+ul,
+ol,
+dl {
+  margin: 0 0 var(--espaco-paragrafo);
+}
+
+p,
+li,
+dd {
+  max-width: var(--largura-texto);
+}
+
+li + li {
+  margin-top: var(--espaco-2);
+}
+
+a {
+  color: var(--cor-link);
+  text-decoration: underline;
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.18em;
+}
+
+a:hover {
+  text-decoration-thickness: 0.16em;
+}
+
+/* inline (não inline-block) para quebrar linha em tela estreita com texto grande. */
+kbd {
+  padding: 0 var(--espaco-1);
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  border: 0.0625rem solid var(--cor-borda);
+  border-radius: 0.25rem;
+  background-color: var(--cor-superficie);
+  font-family: inherit;
+  font-size: 0.9375em;
+  font-weight: 700;
+}
+
+/* ---------- Foco ---------- */
+
+:focus-visible {
+  outline: var(--contorno-foco) solid var(--cor-foco);
+  outline-offset: 0.125rem;
+}
+
+/* Destinos dos links de pulo e da troca de rota: recebem foco por script, não são controles. */
+main:focus,
+nav:focus,
+footer:focus {
+  outline: none;
+}
+
+/* ---------- Utilidades ---------- */
+
+.visualmente-oculto:not(:focus):not(:active) {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.container {
+  width: 100%;
+  max-width: var(--largura-maxima);
+  margin-inline: auto;
+  padding-inline: var(--espaco-4);
+}
+
+.icone {
+  width: 1.25em;
+  height: 1.25em;
+  flex-shrink: 0;
+}
+
+/* ---------- Botões (e links com visual de botão) ---------- */
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  letter-spacing: inherit;
+  word-spacing: inherit;
+}
+
+.botao {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--espaco-2);
+  min-height: var(--alvo-minimo);
+  min-width: var(--alvo-minimo);
+  padding: var(--espaco-2) var(--espaco-5);
+  /* A borda também aparece no modo de cores forçadas do Windows. */
+  border: 0.125rem solid var(--cor-primaria);
+  border-radius: var(--raio);
+  font-weight: 700;
+  line-height: var(--altura-linha-titulo);
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.15s ease-in-out;
+}
+
+.botao--primario {
+  background-color: var(--cor-primaria);
+  color: var(--cor-texto-sobre-primaria);
+}
+
+.botao--primario:hover {
+  background-color: var(--cor-primaria-forte);
+  border-color: var(--cor-primaria-forte);
+}
+
+.botao--secundario {
+  background-color: var(--cor-fundo);
+  color: var(--cor-link);
+}
+
+.botao--secundario:hover {
+  background-color: var(--cor-destaque-fundo);
+}
+
+.botao--grande {
+  min-height: 3.5rem;
+  font-size: 1.125rem;
+}
+
+/* ---------- Grupos de opções (radio e checkbox nativos) ---------- */
+
+fieldset {
+  min-width: 0;
+  margin: 0 0 var(--espaco-5);
+  padding: 0;
+  border: 0;
+}
+
+legend {
+  padding: 0;
+  margin-bottom: var(--espaco-3);
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+
+legend > h2,
+legend > h3 {
+  margin: 0;
+}
+
+.lista-opcoes {
+  display: grid;
+  gap: var(--espaco-2);
+}
+
+.lista-opcoes--linha {
+  grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr));
+}
+
+/* O rótulo envolve o cartão inteiro: clicar em qualquer parte marca a opção. */
+.opcao {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--espaco-3);
+  min-height: var(--alvo-minimo);
+  padding: var(--espaco-3) var(--espaco-4);
+  border: 0.125rem solid var(--cor-borda);
+  border-radius: var(--raio);
+  background-color: var(--cor-fundo);
+  cursor: pointer;
+}
+
+.opcao input {
+  width: 1.5rem;
+  height: 1.5rem;
+  margin: 0;
+  flex-shrink: 0;
+  accent-color: var(--cor-primaria);
+  cursor: pointer;
+}
+
+/* Marcada: a bolinha do radio (forma) + borda mais grossa e fundo destacado. */
+.opcao:has(input:checked) {
+  border-color: var(--cor-primaria);
+  box-shadow: inset 0 0 0 0.125rem var(--cor-primaria);
+  background-color: var(--cor-destaque-fundo);
+}
+
+@supports selector(:has(*)) {
+  .opcao:has(input:focus-visible) {
+    outline: var(--contorno-foco) solid var(--cor-foco);
+    outline-offset: 0.125rem;
+  }
+
+  .opcao input:focus-visible {
+    outline: none;
+  }
+}
+
+.opcao__texto {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-1);
+}
+
+.opcao__rotulo {
+  font-weight: 700;
+}
+
+.opcao__descricao {
+  color: var(--cor-texto-suave);
+}
+
+/* ---------- Avisos ---------- */
+
+.aviso {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--espaco-3);
+  margin: 0 0 var(--espaco-5);
+  padding: var(--espaco-3) var(--espaco-4);
+  border: 0.0625rem solid var(--cor-aviso-borda);
+  border-inline-start-width: 0.375rem;
+  border-radius: var(--raio);
+  background-color: var(--cor-aviso-fundo);
+  color: var(--cor-texto);
+}
+
+.aviso > :last-child {
+  margin-bottom: 0;
+}
+
+.aviso .icone {
+  margin-top: 0.125em;
+}
+
+/* ---------- Tabelas ---------- */
+
+table {
+  width: 100%;
+  margin: 0 0 var(--espaco-5);
+  border-collapse: collapse;
+}
+
+caption {
+  margin-bottom: var(--espaco-2);
+  font-weight: 700;
+  text-align: start;
+}
+
+th,
+td {
+  padding: var(--espaco-2) var(--espaco-3);
+  border: 0.0625rem solid var(--cor-borda);
+  text-align: start;
+  vertical-align: top;
+}
+
+thead th {
+  background-color: var(--cor-superficie);
+}
+
+/* ---------- Modo de cores forçadas (Windows) ---------- */
+
+@media (forced-colors: active) {
+  :focus-visible,
+  .opcao:has(input:focus-visible) {
+    outline-color: Highlight;
+  }
+
+  .opcao:has(input:checked) {
+    border-color: Highlight;
+  }
+
+  .icone {
+    forced-color-adjust: auto;
+  }
+}
