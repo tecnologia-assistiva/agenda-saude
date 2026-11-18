@@ -20,7 +20,7 @@ function grupo(legenda: string): HTMLFieldSetElement {
 describe('tela de configurações', () => {
   it('agrupa as opções em fieldset com legend, e a legenda também é um h2', async () => {
     await abrirConfiguracoes()
-    for (const legenda of ['Cores', 'Tamanho do texto', 'Leitura e movimento']) {
+    for (const legenda of ['Cores', 'Tamanho do texto', 'Leitura', 'Movimento']) {
       expect(grupo(legenda).querySelector('legend > h2')?.textContent?.trim()).toBe(legenda)
     }
   })
@@ -59,6 +59,14 @@ describe('tela de configurações', () => {
     expect(raiz.dataset.fonte).toBe('legivel')
     expect(raiz.dataset.movimento).toBe('reduzido')
     expect(window.localStorage.getItem('agenda-saude:configuracoes')).toContain('"dicasExtras":true')
+  })
+
+  it('"Mostrar dicas extras" começa desligado e, ao ligar, mostra as dicas na hora', async () => {
+    const { wrapper } = await abrirConfiguracoes()
+    expect(document.querySelector('.dica-extra')).toBeNull()
+    const caixa = wrapper.findAll('input[type="checkbox"]').find((c) => c.element.closest('label')?.textContent?.includes('Mostrar dicas extras'))
+    await caixa?.setValue(true)
+    expect(document.querySelector('.dica-extra')?.textContent).toContain('Dica:')
   })
 
   it('o radio marcado reflete o que estava salvo', async () => {

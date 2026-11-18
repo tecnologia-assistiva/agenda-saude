@@ -16,22 +16,15 @@ import {
 } from '@/stores/configuracoes'
 import GrupoOpcoes, { type Opcao } from '@/components/formulario/GrupoOpcoes.vue'
 import TituloPagina from '@/components/comum/TituloPagina.vue'
+import DicaExtra from '@/components/comum/DicaExtra.vue'
 
 const configuracoes = useConfiguracoesStore()
 const { anunciar, alertar } = useAnunciador()
 
 const opcoesTema: Opcao<Tema>[] = [
-  { valor: 'claro', rotulo: 'Claro', descricao: 'Fundo branco e letras escuras.' },
-  {
-    valor: 'escuro',
-    rotulo: 'Escuro',
-    descricao: 'Fundo escuro e letras claras. Cansa menos a vista com pouca luz.',
-  },
-  {
-    valor: 'alto-contraste',
-    rotulo: 'Alto contraste',
-    descricao: 'Fundo preto e letras amarelas. Ajuda quem enxerga pouco.',
-  },
+  { valor: 'claro', rotulo: 'Claro' },
+  { valor: 'escuro', rotulo: 'Escuro' },
+  { valor: 'alto-contraste', rotulo: 'Alto contraste (preto e amarelo)' },
 ]
 
 const opcoesTamanho: Opcao<TamanhoTexto>[] = TAMANHOS_TEXTO.map((valor) => ({
@@ -80,10 +73,8 @@ const paginaAnterior = (() => {
 <template>
   <div class="configuracoes coluna-leitura">
     <TituloPagina>Configurações de acessibilidade</TituloPagina>
-    <p>
-      Mude como o site aparece para você. As mudanças valem na hora e ficam salvas neste navegador. Na
-      primeira visita, usamos as preferências do seu aparelho.
-    </p>
+    <p>As mudanças valem na hora e ficam salvas neste navegador.</p>
+    <DicaExtra>na primeira visita, o site usa as preferências do seu aparelho.</DicaExtra>
 
     <p v-if="configuracoes.salvamentoFalhou" class="texto-atencao">
       Atenção: seu navegador não deixou salvar as configurações. Elas valem até você fechar esta página.
@@ -97,49 +88,41 @@ const paginaAnterior = (() => {
       nome="tamanho-texto"
       :nivel-titulo="2"
       :opcoes="opcoesTamanho"
-      instrucao="Com o texto maior, a página fica mais comprida. Role a tela para ver tudo."
       em-linha
     />
 
     <fieldset>
-      <legend><h2>Leitura e movimento</h2></legend>
+      <legend><h2>Leitura</h2></legend>
       <div class="lista-opcoes">
         <label class="opcao">
           <input v-model="configuracoes.espacamentoAmpliado" type="checkbox" />
-          <span class="opcao__texto">
-            <span class="opcao__rotulo">Aumentar o espaço entre linhas e letras</span>
-            <span class="opcao__descricao">Deixa o texto mais arejado e fácil de acompanhar.</span>
-          </span>
+          <span class="opcao__texto">Mais espaço entre linhas e letras</span>
         </label>
         <label class="opcao">
           <input v-model="configuracoes.fonteLegivel" type="checkbox" />
-          <span class="opcao__texto">
-            <span class="opcao__rotulo">Usar uma fonte mais fácil de ler</span>
-            <span class="opcao__descricao">
-              A fonte Atkinson Hyperlegible diferencia letras parecidas, como I, l e 1.
-            </span>
-          </span>
-        </label>
-        <label class="opcao">
-          <input v-model="configuracoes.reduzirMovimento" type="checkbox" />
-          <span class="opcao__texto">
-            <span class="opcao__rotulo">Reduzir animações</span>
-            <span class="opcao__descricao">Tira os movimentos e as transições da tela.</span>
-          </span>
+          <span class="opcao__texto">Fonte mais fácil de ler (Atkinson Hyperlegible)</span>
         </label>
         <label class="opcao">
           <input v-model="configuracoes.dicasExtras" type="checkbox" />
           <span class="opcao__texto">
-            <span class="opcao__rotulo">Mostrar dicas extras</span>
-            <span class="opcao__descricao">Mostra textos de ajuda a mais em cada etapa do agendamento.</span>
+            <span>Mostrar dicas extras</span>
+            <span class="opcao__descricao">Explicações a mais em cada tela.</span>
           </span>
         </label>
       </div>
     </fieldset>
 
-    <h2>Voltar ao padrão</h2>
-    <p>Volta para as cores e opções do seu aparelho.</p>
-    <p>
+    <fieldset>
+      <legend><h2>Movimento</h2></legend>
+      <div class="lista-opcoes">
+        <label class="opcao">
+          <input v-model="configuracoes.reduzirMovimento" type="checkbox" />
+          <span class="opcao__texto">Reduzir animações</span>
+        </label>
+      </div>
+    </fieldset>
+
+    <p class="configuracoes__acoes">
       <button type="button" class="botao botao--secundario" @click="restaurar">
         Restaurar configurações iniciais
       </button>
@@ -153,6 +136,10 @@ const paginaAnterior = (() => {
 
 <style scoped>
 .configuracoes fieldset {
-  margin-top: var(--espaco-7);
+  margin-top: var(--espaco-6);
+}
+
+.configuracoes__acoes {
+  margin-top: var(--espaco-6);
 }
 </style>

@@ -42,13 +42,41 @@ describe('layout: estrutura', () => {
     expect(document.querySelector('header')?.textContent).toContain(
       'Site de demonstração: projeto acadêmico com dados fictícios.',
     )
-    expect(document.querySelector('footer')?.textContent).toContain('Site de demonstração')
+    expect(document.querySelector('footer')?.textContent).toContain('Projeto acadêmico')
     expect(document.querySelector('main')?.textContent).not.toContain('demonstração')
   })
 
   it('o menu fica logo abaixo da faixa institucional, dentro do cabeçalho', async () => {
     await montarApp('/')
     expect(document.querySelector('header nav#menu')).not.toBeNull()
+  })
+
+  it('rodapé enxuto: links de ajuda, telefone e projeto acadêmico, sem títulos', async () => {
+    await montarApp('/')
+    const rodape = document.querySelector('footer')
+    const links = [...(rodape?.querySelectorAll('a') ?? [])].map((a) => a.textContent?.trim())
+    expect(links).toEqual(['Acessibilidade', 'Configurações'])
+    expect(rodape?.textContent).toContain('0800 000 0000')
+    expect(rodape?.querySelectorAll('h1, h2, h3')).toHaveLength(0)
+  })
+
+  it('o rodapé é igual em todas as páginas (ajuda no mesmo lugar, WCAG 3.2.6)', async () => {
+    const conteudos = []
+    for (const caminho of ['/', '/configuracoes', '/acessibilidade', '/nao-existe']) {
+      await montarApp(caminho)
+      conteudos.push(document.querySelector('footer')?.textContent?.replace(/\s+/g, ' ').trim())
+      document.body.innerHTML = ''
+    }
+    expect(new Set(conteudos).size).toBe(1)
+  })
+
+  it('Início é enxuto: h1, uma frase, a ação principal, um link e uma linha', async () => {
+    await montarApp('/')
+    const main = document.querySelector('main .coluna-leitura')
+    expect(main?.querySelector('h1')?.textContent?.trim()).toBe('Agendar consulta')
+    expect(main?.querySelectorAll('h2')).toHaveLength(0)
+    expect(main?.textContent).toContain('Você vai precisar do nome, data de nascimento e telefone. Não há tempo limite.')
+    expect(main?.querySelector('.dica-extra')).toBeNull()
   })
 
   it('a tela Início tem um único botão principal; o resto são links', async () => {
