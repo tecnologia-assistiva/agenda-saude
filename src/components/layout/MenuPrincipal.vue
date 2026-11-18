@@ -1,6 +1,7 @@
 <script setup lang="ts">
 /*
- * Menu principal. Destino do atalho "Ir para o menu [2]" (id="menu", tabindex="-1").
+ * Menu principal: links simples logo abaixo da faixa institucional.
+ * Destino do atalho "Ir para o menu [2]" (id="menu", tabindex="-1").
  * Sem menu escondido: os itens quebram linha em telas estreitas.
  * O RouterLink já coloca aria-current="page" no item da página atual.
  */
@@ -18,8 +19,7 @@
 
 <style scoped>
 .menu {
-  background-color: var(--cor-superficie);
-  border-bottom: 0.0625rem solid var(--cor-borda);
+  border-bottom: 0.0625rem solid var(--cor-separador);
 }
 
 .menu__lista {
@@ -38,19 +38,14 @@
   display: inline-flex;
   align-items: center;
   min-height: var(--alvo-minimo);
-  padding-block: var(--espaco-1);
-  font-weight: 700;
-  text-decoration: none;
+  padding-block: var(--espaco-2) var(--espaco-1);
   border-bottom: 0.25rem solid transparent;
 }
 
-.menu__link:hover {
-  text-decoration: underline;
-}
-
-/* Página atual: barra embaixo (forma), não só cor. */
+/* Página atual: negrito e barra embaixo (forma, não só cor). */
 .menu__link[aria-current="page"] {
-  border-bottom-color: var(--cor-primaria);
-  color: var(--cor-texto);
+  border-bottom-color: var(--cor-link);
+  font-weight: 700;
+  text-decoration: none;
 }
 </style>

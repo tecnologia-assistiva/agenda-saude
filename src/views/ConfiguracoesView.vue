@@ -16,7 +16,6 @@ import {
 } from '@/stores/configuracoes'
 import GrupoOpcoes, { type Opcao } from '@/components/formulario/GrupoOpcoes.vue'
 import TituloPagina from '@/components/comum/TituloPagina.vue'
-import Icone from '@/components/comum/Icone.vue'
 
 const configuracoes = useConfiguracoesStore()
 const { anunciar, alertar } = useAnunciador()
@@ -79,19 +78,16 @@ const paginaAnterior = (() => {
 </script>
 
 <template>
-  <div class="configuracoes">
+  <div class="configuracoes coluna-leitura">
     <TituloPagina>Configurações de acessibilidade</TituloPagina>
     <p>
       Mude como o site aparece para você. As mudanças valem na hora e ficam salvas neste navegador. Na
       primeira visita, usamos as preferências do seu aparelho.
     </p>
 
-    <div v-if="configuracoes.salvamentoFalhou" class="aviso">
-      <Icone nome="alerta" />
-      <p>
-        Seu navegador não deixou salvar as configurações. Elas valem até você fechar esta página.
-      </p>
-    </div>
+    <p v-if="configuracoes.salvamentoFalhou" class="texto-atencao">
+      Atenção: seu navegador não deixou salvar as configurações. Elas valem até você fechar esta página.
+    </p>
 
     <GrupoOpcoes v-model="tema" legenda="Cores" nome="tema" :nivel-titulo="2" :opcoes="opcoesTema" />
 
@@ -150,23 +146,13 @@ const paginaAnterior = (() => {
     </p>
 
     <p v-if="paginaAnterior">
-      <RouterLink :to="paginaAnterior" class="link-voltar">
-        <Icone nome="seta-esquerda" />
-        Voltar para a página anterior
-      </RouterLink>
+      <RouterLink :to="paginaAnterior">Voltar para a página anterior</RouterLink>
     </p>
   </div>
 </template>
 
 <style scoped>
 .configuracoes fieldset {
-  margin-top: var(--espaco-6);
-}
-
-.link-voltar {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--espaco-1);
-  min-height: var(--alvo-minimo);
+  margin-top: var(--espaco-7);
 }
 </style>
