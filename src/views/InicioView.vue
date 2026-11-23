@@ -9,7 +9,7 @@ const agendamento = useAgendamentoStore()
 <template>
   <div class="coluna-leitura">
     <TituloPagina>Agendar consulta</TituloPagina>
-    <p class="texto-destaque">Marque, veja ou cancele consultas na UBS Vila Esperança.</p>
+    <p class="texto-destaque">Marque, veja ou cancele consultas na UBS Ponta Grossa.</p>
     <p>
       <RouterLink to="/agendar" class="botao botao--inicio">
         {{ agendamento.iniciado ? 'Continuar agendamento' : 'Começar agendamento' }}

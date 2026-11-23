@@ -26,10 +26,11 @@ describe('troca de rota: título e foco', () => {
     expect(h1()?.getAttribute('tabindex')).toBe('-1')
   })
 
-  it('quando só o # muda (links de pulo), não mexe no foco', async () => {
+  it('quando só o # muda, não mexe no foco', async () => {
     const { router } = await montarApp('/')
     await navegar(router, '/acessibilidade')
-    const link = document.querySelector<HTMLAnchorElement>('a[href="#rodape"]')
+    const link = document.querySelector<HTMLAnchorElement>('footer a[href="/configuracoes"]')
+    expect(link).not.toBeNull()
     link?.focus()
     await navegar(router, '/acessibilidade#rodape')
     expect(document.activeElement).toBe(link)

@@ -17,9 +17,9 @@ for (const tema of TEMAS) {
     await preparar(page, { rascunho: RASCUNHO_ETAPA_3, configuracoes: { tema } })
 
     await abrir(page, './')
-    const pular = page.getByRole('link', { name: 'Ir para o conteúdo [1]' })
-    await teclarAte(page, pular)
-    await conferirFoco(page, pular)
+    const acessibilidade = page.locator('.barra-acessibilidade').getByRole('link', { name: 'Acessibilidade' })
+    await teclarAte(page, acessibilidade)
+    await conferirFoco(page, acessibilidade)
     const altoContraste = page.getByRole('button', { name: 'Alto contraste' })
     await teclarAte(page, altoContraste)
     await conferirFoco(page, altoContraste)

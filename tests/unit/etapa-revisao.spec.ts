@@ -123,7 +123,7 @@ describe('etapa 5: confirmação', () => {
   it('resumo com data completa e local; indicador com as 4 etapas concluídas, sem links', async () => {
     await confirmar()
     expect(valores()).toContain('quinta-feira, 19 de novembro de 2026')
-    expect(valores()).toContain('UBS Vila Esperança')
+    expect(valores()).toContain('UBS Ponta Grossa')
     const itens = [...document.querySelectorAll('ol.etapas > li')]
     expect(itens.map((li) => li.querySelector('.etapas__estado') !== null)).toEqual([true, true, true, true, false])
     expect(document.querySelector('ol.etapas a')).toBeNull()

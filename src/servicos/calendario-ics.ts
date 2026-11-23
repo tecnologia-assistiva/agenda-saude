@@ -3,7 +3,7 @@ import { nomeDaEspecialidade, nomeDoProfissional } from './catalogo'
 import { deISO } from '@/utils/datas'
 import type { Consulta } from '@/stores/consultas'
 
-export const NOME_UNIDADE = 'UBS Vila Esperança'
+export const NOME_UNIDADE = 'UBS Ponta Grossa'
 
 const LIMITE_BYTES = 75
 const codificador = new TextEncoder()

@@ -60,7 +60,7 @@ describe('arquivo .ics da consulta', () => {
 
   it('resumo, local e descrição com quem atende e o protocolo, com vírgulas escapadas', () => {
     expect(propriedade(ics, 'SUMMARY')).toBe('Consulta de clínica geral')
-    expect(propriedade(ics, 'LOCATION')).toBe('UBS Vila Esperança (fictícia)')
+    expect(propriedade(ics, 'LOCATION')).toBe('UBS Ponta Grossa (fictícia)')
     expect(propriedade(ics, 'DESCRIPTION')).toBe(
       'Com Marcos Ribeiro. Protocolo 1234-5678. Chegue 15 minutos antes\\, com um documento com foto.',
     )

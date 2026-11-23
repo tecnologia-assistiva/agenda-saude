@@ -10,13 +10,12 @@ async function enterLevaPara(page: Page, rota: RegExp, titulo: string | RegExp) 
   await expect(h1(page)).toContainText(titulo)
 }
 
-test('o primeiro Tab da página cai em "Ir para o conteúdo"', async ({ page }) => {
+test('o primeiro Tab da página cai no link "Acessibilidade" da barra do topo', async ({ page }) => {
   await preparar(page)
   await abrir(page, './')
   await page.keyboard.press('Tab')
-  await expect(page.getByRole('link', { name: 'Ir para o conteúdo [1]' })).toBeFocused()
-  await page.keyboard.press('Enter')
-  await expect(page.locator('main')).toBeFocused()
+  await expect(page.locator('.barra-acessibilidade').getByRole('link', { name: 'Acessibilidade' })).toBeFocused()
+  await enterLevaPara(page, /acessibilidade$/, 'Sobre a acessibilidade')
 })
 
 test('fluxo inteiro só com teclado: agendar, ver, remarcar, cancelar e apagar os dados', async ({ page }) => {

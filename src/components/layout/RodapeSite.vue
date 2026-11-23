@@ -2,12 +2,11 @@
 </script>
 
 <template>
-  <footer id="rodape" class="rodape" tabindex="-1">
+  <footer id="rodape" class="rodape">
     <div class="container">
       <ul class="rodape__linha">
         <li><RouterLink to="/acessibilidade" class="rodape__link">Acessibilidade</RouterLink></li>
         <li><RouterLink to="/configuracoes" class="rodape__link">Configurações</RouterLink></li>
-        <li>Ajuda por telefone (fictício): <span class="rodape__telefone">0800 000 0000</span></li>
       </ul>
       <p class="rodape__nota">Projeto acadêmico da disciplina Tecnologias Assistivas.</p>
     </div>
@@ -40,10 +39,6 @@
   display: inline-flex;
   align-items: center;
   min-height: var(--alvo-minimo);
-}
-
-.rodape__telefone {
-  display: inline-block;
 }
 
 .rodape__nota {

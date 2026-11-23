@@ -24,17 +24,6 @@ function alternarAltoContraste() {
     <div class="container barra-acessibilidade__conteudo">
       <ul class="barra-acessibilidade__lista">
         <li>
-          <a href="#conteudo" accesskey="1" class="atalho"><span><span class="atalho__prefixo">Ir para o </span><span class="atalho__alvo">conteúdo</span><span class="atalho__numero"> [1]</span></span></a>
-        </li>
-        <li>
-          <a href="#menu" accesskey="2" class="atalho"><span><span class="atalho__prefixo">Ir para o </span><span class="atalho__alvo">menu</span><span class="atalho__numero"> [2]</span></span></a>
-        </li>
-        <li>
-          <a href="#rodape" accesskey="4" class="atalho"><span><span class="atalho__prefixo">Ir para o </span><span class="atalho__alvo">rodapé</span><span class="atalho__numero"> [4]</span></span></a>
-        </li>
-      </ul>
-      <ul class="barra-acessibilidade__lista">
-        <li>
           <RouterLink to="/acessibilidade">Acessibilidade</RouterLink>
         </li>
         <li>
@@ -63,7 +52,7 @@ function alternarAltoContraste() {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   gap: 0 var(--espaco-4);
   padding-block: var(--espaco-1);
 }
@@ -95,23 +84,6 @@ function alternarAltoContraste() {
   .barra-acessibilidade__conteudo {
     flex-direction: column;
     align-items: flex-start;
-  }
-
-  .atalho__prefixo {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
-  }
-
-  .atalho__alvo {
-    text-transform: capitalize;
-  }
-
-  .atalho__numero {
-    display: none;
   }
 }
 

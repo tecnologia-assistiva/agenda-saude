@@ -14,10 +14,4 @@ export default withVueTs(
       'vue/multi-word-component-names': 'off',
     },
   },
-  {
-    files: ['src/components/layout/BarraAcessibilidade.vue'],
-    rules: {
-      'vuejs-accessibility/no-access-key': 'off',
-    },
-  },
 )

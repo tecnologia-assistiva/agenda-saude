@@ -49,6 +49,17 @@ describe('etapa 1: seus dados', () => {
     expect(campo('telefone').getAttribute('aria-invalid')).toBeNull()
   })
 
+  it('data, telefone e cartão SUS só aceitam números, têm limite e se formatam enquanto digita', async () => {
+    await montarApp('/agendar/seus-dados')
+    await digitar('data-nascimento', '15a031980999')
+    await digitar('telefone', 'tel 11987654321 999')
+    await digitar('cartao-sus', 'x1234567890123456789')
+    expect(campo('data-nascimento').value).toBe('15/03/1980')
+    expect(campo('telefone').value).toBe('(11) 98765-4321')
+    expect(campo('cartao-sus').value).toBe('123 4567 8901 2345')
+    expect(document.querySelector('.resumo-erros')).toBeNull()
+  })
+
   it('ao enviar vazio: resumo no topo com foco, links na ordem dos campos e "Erro:" no título', async () => {
     await montarApp('/agendar/seus-dados')
     await enviar()
