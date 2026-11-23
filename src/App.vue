@@ -1,9 +1,4 @@
 <script setup lang="ts">
-/*
- * Estrutura de todas as páginas: header (barra eMAG, faixa institucional, nav e faixa de
- * demonstração), main e footer. As regiões de anúncio ficam aqui, uma vez só, e existem desde a
- * carga (o leitor de tela só anuncia mudanças em regiões que já estavam na página).
- */
 import CabecalhoSite from '@/components/layout/CabecalhoSite.vue'
 import RodapeSite from '@/components/layout/RodapeSite.vue'
 import { useAnunciador } from '@/composables/useAnunciador'

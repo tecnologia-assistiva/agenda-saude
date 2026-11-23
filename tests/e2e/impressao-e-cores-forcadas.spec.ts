@@ -3,7 +3,6 @@ import { RASCUNHO_ETAPA_3, abrir, confirmar, escolherDiaNoCalendario, escolherPr
 
 test.describe('impressão do comprovante', () => {
   test('a confirmação imprime só o conteúdo: sem cabeçalho, menu, barra eMAG, rodapé nem botões', async ({ page }) => {
-    // Alto contraste na tela; no papel, texto escuro (o amarelo sumiria no branco).
     await preparar(page, { rascunho: RASCUNHO_ETAPA_3, configuracoes: { tema: 'alto-contraste' } })
     await escolherPrimeiroHorario(page)
     await confirmar(page)
@@ -13,13 +12,11 @@ test.describe('impressão do comprovante', () => {
       await expect(page.locator(parte).first(), parte).toBeHidden()
     }
     await expect(page.locator('main h1')).toBeVisible()
-    // innerText: a legenda "Etapa 5 de 5" fica fora do papel.
     await expect(page.locator('main h1')).toHaveText('Consulta agendada', { useInnerText: true })
     await expect(page.locator('main dl')).toBeVisible()
     await expect(page.locator('.so-impressao')).toContainText('Comprovante de demonstração')
     expect(await page.locator('main h1').evaluate((el) => getComputedStyle(el).color)).toBe('rgb(27, 27, 27)')
 
-    // Na tela, tudo volta.
     await page.emulateMedia({ media: 'screen' })
     await expect(page.locator('header')).toBeVisible()
     await expect(page.locator('.so-impressao')).toBeHidden()
@@ -42,7 +39,6 @@ test.describe('modo de contraste do Windows (forced-colors)', () => {
     expect(doSelecionado.fundo, 'fundo do dia escolhido').not.toBe(doOutro.fundo)
     expect(doSelecionado.texto, 'texto do dia escolhido').not.toBe(doOutro.texto)
 
-    // Foco num radio (Tab) e depois no dia (Shift+Tab volta para a grade): contorno sólido e visível.
     const radio = page.locator('#horario-do-dia input[type="radio"]').first()
     await teclarAte(page, radio)
     const linha = radio.locator('xpath=ancestor::label[1]')
@@ -60,7 +56,6 @@ test.describe('modo de contraste do Windows (forced-colors)', () => {
     expect(contorno.largura).toBeGreaterThanOrEqual(2)
     expect(contorno.cor).not.toMatch(/rgba\(.*, 0\)|transparent/)
     expect(contorno.cor).not.toBe(contorno.fundo)
-    // O escolhido com foco continua diferente de um dia comum.
     expect(await selecionado.evaluate((b) => getComputedStyle(b).backgroundColor)).not.toBe(doOutro.fundo)
   })
 })

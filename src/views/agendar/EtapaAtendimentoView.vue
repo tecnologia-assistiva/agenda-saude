@@ -1,9 +1,4 @@
 <script setup lang="ts">
-/*
- * Etapa 2: especialidade e profissional, em grupos de radio.
- * Trocar a especialidade ou o profissional apaga só o horário já escolhido: a tela avisa antes
- * (texto fixo) e depois (texto na tela + anúncio na região de status).
- */
 import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAnunciador } from '@/composables/useAnunciador'

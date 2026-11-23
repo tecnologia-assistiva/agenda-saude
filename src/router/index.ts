@@ -14,9 +14,7 @@ import { ETAPAS, caminhoDaPrimeiraEtapaIncompleta, etapa, instalarGuardasDoAgend
 
 declare module 'vue-router' {
   interface RouteMeta {
-    /** Título da página; o <title> fica "titulo – Agenda Saúde". */
     titulo: string
-    /** Número da etapa do agendamento (1 a 5). */
     etapa?: number
   }
 }
@@ -37,7 +35,6 @@ export const rotas: RouteRecordRaw[] = [
     path: '/agendar',
     component: () => import('@/views/AgendarLayout.vue'),
     children: [
-      // "/agendar" sozinho leva à primeira etapa que falta completar.
       { path: '', name: 'agendar', redirect: () => caminhoDaPrimeiraEtapaIncompleta() },
       ...ETAPAS.map((e) => ({
         path: e.caminho.replace('/agendar/', ''),
@@ -48,8 +45,6 @@ export const rotas: RouteRecordRaw[] = [
   },
   { path: '/minhas-consultas', name: 'minhas-consultas', component: MinhasConsultasView, meta: { titulo: 'Minhas consultas' } },
   {
-    // "Remarcar" é um link para cá: carrega a consulta no rascunho (mesmo protocolo) e abre a etapa 3,
-    // com as etapas 1 e 2 já prontas (WCAG 3.3.7). A tela nunca aparece: a guarda sempre redireciona.
     path: '/minhas-consultas/remarcar/:protocolo',
     name: 'remarcar',
     component: MinhasConsultasView,
@@ -83,7 +78,6 @@ export const rotas: RouteRecordRaw[] = [
 
 const rolagem: RouterScrollBehavior = (para, de, posicaoSalva) => {
   if (posicaoSalva) return posicaoSalva
-  // Links de pulo (#conteudo, #menu, #rodape): o navegador já rolou e focou o destino.
   if (para.path === de.path && para.hash) return false
   return { top: 0 }
 }

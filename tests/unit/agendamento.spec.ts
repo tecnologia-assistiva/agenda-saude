@@ -41,7 +41,7 @@ describe('rascunho do agendamento', () => {
     expect(agendamento.primeiraEtapaIncompleta).toBe(2)
 
     agendamento.escolherEspecialidade('pediatria')
-    agendamento.escolherProfissional('helena-duarte') // é de clínica geral
+    agendamento.escolherProfissional('helena-duarte')
     expect(agendamento.etapaCompleta(2)).toBe(false)
     agendamento.escolherProfissional('qualquer')
     expect(agendamento.etapaCompleta(2)).toBe(true)

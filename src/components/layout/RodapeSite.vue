@@ -1,8 +1,4 @@
 <script setup lang="ts">
-/*
- * Rodapé igual em todas as páginas, com a ajuda sempre no mesmo lugar (WCAG 3.2.6).
- * Destino do atalho "Ir para o rodapé [4]".
- */
 </script>
 
 <template>
@@ -46,7 +42,6 @@
   min-height: var(--alvo-minimo);
 }
 
-/* inline-block: o número fica inteiro numa linha quando cabe, e quebra só quando não cabe (texto em 200%). */
 .rodape__telefone {
   display: inline-block;
 }

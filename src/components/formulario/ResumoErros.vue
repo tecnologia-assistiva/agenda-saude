@@ -1,14 +1,7 @@
 <script setup lang="ts">
-/*
- * Resumo dos erros no topo do formulário (WCAG 3.3.1). Aparece só ao enviar e recebe o foco a cada
- * tentativa com erro (`tentativa` muda), para o leitor anunciar "Corrija 2 problemas para continuar".
- * Cada link leva o foco ao campo (ou à opção do grupo) e rola até o rótulo ou a legenda, para que a
- * pergunta apareça na tela junto com o campo.
- */
 import { computed, nextTick, ref, useId, watch } from 'vue'
 
 export interface ErroDoResumo {
-  /** id do campo (input) ou do grupo (fieldset). */
   id: string
   mensagem: string
 }
@@ -31,10 +24,6 @@ watch(
   },
 )
 
-/**
- * O alvo pode ser o próprio campo, um grupo (fieldset: foca a opção marcada ou a primeira) ou uma
- * grade (calendário: foca o dia com tabindex="0"). Rola até o rótulo, a legenda ou o título da grade.
- */
 function irParaCampo(id: string) {
   const alvo = document.getElementById(id)
   if (!alvo) return

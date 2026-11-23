@@ -64,7 +64,6 @@ describe('indicador de etapas', () => {
     const [primeira, segunda, terceira] = itensDoIndicador()
     const link = primeira?.querySelector('a')
     expect(link?.getAttribute('href')).toBe('/agendar/seus-dados')
-    // O nome acessível começa pelo texto visível (2.5.3).
     expect(texto(link)).toBe('Etapa 1 de 5: Seus dados, concluída')
     expect(segunda?.getAttribute('aria-current')).toBe('step')
     expect(segunda?.querySelector('a')).toBeNull()

@@ -6,7 +6,6 @@ import { simularMidia } from './ajuda/simular-midia'
 
 enableAutoUnmount(afterEach)
 
-// O jsdom não implementa a rolagem; o scrollBehavior do router chama window.scrollTo.
 window.scrollTo = () => {}
 simularDialogo()
 

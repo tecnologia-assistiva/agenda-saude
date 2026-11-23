@@ -14,16 +14,9 @@ import {
   type Estado,
 } from './ajuda'
 
-/*
- * axe (WCAG 2.0, 2.1 e 2.2, níveis A e AA) em todas as rotas e nos estados que mudam a tela:
- * rascunho preenchido, erros, calendário com dia, os dois diálogos, lista com e sem consultas,
- * confirmação e etapa 1 com dados salvos. Cada cenário roda nos 3 temas.
- */
-
 interface Cenario {
   nome: string
   estado?: Estado
-  /** Leva a página ao estado a verificar. */
   ir: (page: Page) => Promise<void>
 }
 

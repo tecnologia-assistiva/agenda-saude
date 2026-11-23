@@ -1,10 +1,4 @@
 <script setup lang="ts">
-/*
- * Etapa 4: revisão (WCAG 3.3.4). Resumo das etapas 1 a 3; cada bloco tem "Alterar", que abre a
- * etapa com ?retorno=revisao (o botão de lá vira "Salvar e voltar para a revisão").
- * A consulta só é criada aqui, no "Confirmar agendamento". Depois disso a confirmação substitui a
- * revisão no histórico: "Voltar" do navegador não reabre um agendamento já enviado.
- */
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import {
@@ -73,7 +67,6 @@ let enviando = false
 
 async function confirmar() {
   if (enviando) return
-  // O horário pode ter deixado de valer com a página aberta (passou da meia-noite, por exemplo).
   if (agendamento.primeiraEtapaIncompleta < 4) {
     await router.push(caminhoDaPrimeiraEtapaIncompleta())
     return
@@ -95,7 +88,6 @@ async function confirmar() {
     <div class="revisao__cabecalho">
       <h2 class="revisao__titulo">{{ bloco.titulo }}</h2>
       <RouterLink :to="{ path: etapa(bloco.numero).caminho, query: { retorno: RETORNO_REVISAO } }" class="revisao__alterar">
-        <!-- O espaço vai dentro da expressão: sozinho no começo do <span>, o Vue o descartaria. -->
         Alterar<span class="visualmente-oculto">{{ ` ${bloco.titulo.toLowerCase()}` }}</span>
       </RouterLink>
     </div>
@@ -118,7 +110,6 @@ async function confirmar() {
   margin-bottom: var(--espaco-2);
 }
 
-/* min-width: 0: como item flex, o título pode encolher e quebrar a palavra longa (texto em 200%). */
 .revisao__titulo {
   min-width: 0;
   margin: 0;

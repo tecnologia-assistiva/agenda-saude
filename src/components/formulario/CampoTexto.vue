@@ -1,12 +1,4 @@
 <script setup lang="ts">
-/*
- * Campo de texto acessível. Ordem: rótulo → instrução/formato → dica extra → erro → campo.
- * - "(obrigatório)" ou "(opcional)" em texto no rótulo, além do `required` nativo
- *   (o <form> usa novalidate: a validação é nossa, ao enviar).
- * - aria-describedby liga instrução, dica e erro ao campo; aria-invalid só quando há erro.
- * - Sem máscara durante a digitação: aceita colar em qualquer formato e formata ao sair (`formatar`).
- * - Fonte de pelo menos 16 px (base.css), para o iPhone não dar zoom ao focar.
- */
 import { computed } from 'vue'
 import { useConfiguracoesStore } from '@/stores/configuracoes'
 import DicaExtra from '@/components/comum/DicaExtra.vue'

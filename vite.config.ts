@@ -5,10 +5,6 @@ import vue from '@vitejs/plugin-vue'
 import type { Plugin } from 'vite'
 import { defineConfig } from 'vitest/config'
 
-/**
- * O GitHub Pages devolve 404.html para qualquer caminho desconhecido.
- * Uma cópia do index.html faz o app abrir direto em /agenda-saude/configuracoes.
- */
 function copiar404(): Plugin {
   let pastaSaida = 'dist'
   return {
@@ -24,7 +20,6 @@ function copiar404(): Plugin {
 }
 
 export default defineConfig({
-  // No GitHub Actions: BASE_PATH=/<nome-do-repositório>/
   base: process.env.BASE_PATH ?? '/',
   plugins: [vue(), copiar404()],
   resolve: {

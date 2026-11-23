@@ -13,7 +13,6 @@ import {
 } from '@/servicos/horarios'
 import { diaDaSemana } from '@/utils/datas'
 
-/* A data de hoje é fixa nos testes: quarta-feira, 18/11/2026 (20/11 é feriado). */
 const HOJE = '2026-11-18'
 const TODOS = profissionais.map((p) => p.id)
 
@@ -52,7 +51,6 @@ describe('gerador de horários', () => {
     const amanha = gerarHorariosLivres('2026-11-19', TODOS)
     const emComum = livres.filter((h) => h.data >= '2026-11-20' && h.data !== '2026-11-23' && h.data !== '2026-11-30')
     const chavesDeAmanha = new Set(amanha.map(chaveDoHorario))
-    // Um dia útil a mais muda quais dias ficam lotados; os outros horários continuam iguais.
     const lotadosDeAmanha = diasLotados('2026-11-19')
     expect(
       emComum.filter((h) => !lotadosDeAmanha.has(h.data)).every((h) => chavesDeAmanha.has(chaveDoHorario(h))),
@@ -92,7 +90,7 @@ describe('horários para escolher na etapa 3', () => {
     if (!primeiro) throw new Error('sem horários')
     expect(horarioAindaValido(primeiro, HOJE, 'clinica-geral', 'qualquer')).toBe(true)
     expect(horarioAindaValido(primeiro, HOJE, 'clinica-geral', primeiro.profissionalId)).toBe(true)
-    expect(horarioAindaValido(primeiro, primeiro.data, 'clinica-geral', 'qualquer')).toBe(false) // já passou
+    expect(horarioAindaValido(primeiro, primeiro.data, 'clinica-geral', 'qualquer')).toBe(false)
     expect(horarioAindaValido(primeiro, HOJE, 'pediatria', 'qualquer')).toBe(false)
     expect(horarioAindaValido({ ...primeiro, hora: '12:15' }, HOJE, 'clinica-geral', 'qualquer')).toBe(false)
   })

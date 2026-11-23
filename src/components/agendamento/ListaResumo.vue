@@ -1,8 +1,4 @@
 <script setup lang="ts">
-/*
- * Pares rótulo e valor num <dl> (revisão e confirmação). Cada par fica num <div>, o que o HTML
- * permite dentro de <dl>. Na tela estreita o valor vai embaixo do rótulo; na larga, ao lado.
- */
 export interface ItemResumo {
   rotulo: string
   valor: string
@@ -39,7 +35,6 @@ defineProps<{ itens: ItemResumo[] }>()
   margin: 0;
 }
 
-/* Base em rem: com texto em 200% a coluna do rótulo cresce junto e não aperta o valor. */
 @media (min-width: 40em) {
   .lista-resumo__linha {
     display: grid;

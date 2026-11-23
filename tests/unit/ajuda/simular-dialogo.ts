@@ -1,7 +1,3 @@
-/**
- * O jsdom não tem showModal() nem close() no <dialog>. Simula só o que o navegador faz e o app usa:
- * abrir (atributo open), Esc dispara "cancel" e fecha, e fechar dispara "close".
- */
 export function simularDialogo() {
   const prototipo = HTMLDialogElement.prototype
 

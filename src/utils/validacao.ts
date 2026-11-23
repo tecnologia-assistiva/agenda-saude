@@ -1,7 +1,3 @@
-/*
- * Validação dos dados pessoais (etapa 1). Roda só ao enviar o formulário.
- * Cada mensagem diz o que fazer para corrigir (WCAG 3.3.3), em frase curta.
- */
 import {
   dataExiste,
   interpretarData,
@@ -19,7 +15,6 @@ export interface DadosPessoais {
 
 export type ErrosDe<T> = Partial<Record<keyof T, string>>
 
-/** Lê dados pessoais salvos (localStorage), trocando por vazio o que não for texto. */
 export function dadosPessoaisDe(valor: unknown): DadosPessoais {
   const d = (typeof valor === 'object' && valor !== null ? valor : {}) as Record<string, unknown>
   const texto = (v: unknown) => (typeof v === 'string' ? v : '')
@@ -58,9 +53,6 @@ export function validarDataNascimento(valor: string, hoje: Date = new Date()): s
   return null
 }
 
-/**
- * Celular: DDD + 9 números começando com 9. Fixo: DDD + 8 números começando com 2, 3, 4 ou 5.
- */
 export function validarTelefone(valor: string): string | null {
   if (!valor.trim()) return 'Digite um telefone com DDD. Pode ser celular ou fixo.'
   const digitos = normalizarTelefone(valor)
@@ -77,7 +69,6 @@ export function validarTelefone(valor: string): string | null {
   return null
 }
 
-/** Opcional: vazio é válido. */
 export function validarCartaoSus(valor: string): string | null {
   if (!valor.trim()) return null
   if (somenteDigitos(valor).length !== 15) return 'O cartão SUS tem 15 números. Confira ou deixe em branco.'

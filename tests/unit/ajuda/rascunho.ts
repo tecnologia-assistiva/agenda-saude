@@ -7,7 +7,6 @@ export const DADOS_VALIDOS = {
   cartaoSus: '',
 }
 
-/** Grava um rascunho no localStorage antes de montar o app (as guardas leem dele). */
 export function salvarRascunho(parcial: Partial<Rascunho>) {
   const rascunho: Rascunho = { ...rascunhoVazio(), ...parcial }
   window.localStorage.setItem('agenda-saude:rascunho', JSON.stringify({ versao: 1, dados: rascunho }))

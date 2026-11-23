@@ -1,10 +1,4 @@
 <script setup lang="ts">
-/*
- * Etapa 1: dados pessoais. Os campos editam o rascunho direto (nada se perde ao voltar).
- * Validação só ao enviar; antes, formata o que foi colado e ainda não saiu do campo.
- * Num agendamento novo, os campos já vêm com os dados do último (WCAG 3.3.7), com aviso e a opção
- * "Apagar meus dados", que pede confirmação no DialogoModal.
- */
 import { ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAnunciador } from '@/composables/useAnunciador'
@@ -28,7 +22,6 @@ const { anunciar } = useAnunciador()
 const dados = agendamento.rascunho.dados
 
 agendamento.preencherComDadosSalvos()
-/** O diálogo só existe na tela quando há dados salvos para apagar. */
 const temDialogo = agendamento.rascunho.usouDadosSalvos
 const dialogo = ref<InstanceType<typeof DialogoModal> | null>(null)
 const dadosApagados = ref(false)

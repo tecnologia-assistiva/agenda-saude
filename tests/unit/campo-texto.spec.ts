@@ -8,7 +8,6 @@ import CampoTexto from '@/components/formulario/CampoTexto.vue'
 
 type Props = Record<string, unknown>
 
-/** Monta o campo com v-model de verdade (um ref no componente pai). */
 function montarCampo(props: Props = {}, valorInicial = '') {
   const valor = ref(valorInicial)
   const Pai = defineComponent({

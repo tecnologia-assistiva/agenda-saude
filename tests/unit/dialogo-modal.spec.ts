@@ -3,12 +3,6 @@ import { describe, expect, it, vi } from 'vitest'
 import { defineComponent, h, ref } from 'vue'
 import DialogoModal from '@/components/comum/DialogoModal.vue'
 
-/*
- * O <dialog> usa o stub de tests/unit/ajuda/simular-dialogo.ts (o jsdom não tem showModal):
- * o que se testa aqui é o comportamento do componente — foco inicial, Esc, foco de volta e o evento.
- */
-
-/** Página mínima: h1, o botão que abre e o diálogo. `somePeloConfirmar` tira o botão ao confirmar. */
 function montar(opcoes: { somePeloConfirmar?: boolean } = {}) {
   const confirmacoes = ref(0)
   const mostrarBotao = ref(true)

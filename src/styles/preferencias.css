@@ -1,9 +1,3 @@
-/*
- * Preferências do usuário, aplicadas como atributos no <html> (ver stores/configuracoes.ts).
- * O tamanho do texto não está aqui: é o font-size do <html>, em % do padrão do navegador.
- */
-
-/* Espaçamento ampliado: acima dos mínimos da WCAG 1.4.12 (linha 1,5; letras 0,12em; palavras 0,16em; parágrafo 2em). */
 :root[data-espacamento="ampliado"] {
   --altura-linha: 1.8;
   --altura-linha-titulo: 1.5;
@@ -15,12 +9,10 @@
   word-spacing: 0.16em;
 }
 
-/* Fonte mais legível: Atkinson Hyperlegible Next, servida pelo próprio site (@fontsource), sem CDN. */
 :root[data-fonte="legivel"] {
   --fonte-texto: "Atkinson Hyperlegible Next", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
 }
 
-/* Reduzir animações: vale pela opção do site e também pela preferência do sistema. */
 :root[data-movimento="reduzido"] *,
 :root[data-movimento="reduzido"] *::before,
 :root[data-movimento="reduzido"] *::after {

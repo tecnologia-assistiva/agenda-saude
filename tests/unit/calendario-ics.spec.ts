@@ -2,8 +2,6 @@ import { describe, expect, it } from 'vitest'
 import { dobrarLinha, enderecoDoIcs, escaparTexto, gerarIcs, nomeDoArquivoIcs } from '@/servicos/calendario-ics'
 import { consulta } from './ajuda/consultas'
 
-/* Arquivo .ics do "Adicionar à agenda" (RFC 5545). */
-
 const AGORA = new Date(Date.UTC(2026, 10, 18, 13, 0, 0))
 const CONSULTA = consulta({
   protocolo: '1234-5678',
@@ -15,7 +13,6 @@ const CONSULTA = consulta({
 
 const bytes = (texto: string) => new TextEncoder().encode(texto).length
 
-/** Desfaz a dobra (CRLF + espaço) e devolve as linhas lógicas. */
 function linhas(ics: string): string[] {
   return ics.replace(/\r\n /g, '').split('\r\n').filter(Boolean)
 }

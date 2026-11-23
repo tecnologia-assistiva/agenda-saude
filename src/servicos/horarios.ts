@@ -1,20 +1,9 @@
-/*
- * Horários livres gerados na hora a partir de dados/agenda-modelo.json, sempre para os próximos
- * 30 dias contados de hoje (datas fixas num JSON "venceriam" antes da apresentação).
- * - Sem atendimento em fins de semana e feriados.
- * - "Dias lotados": o 2º e o 7º dia útil depois de hoje não têm nenhuma vaga.
- * - Ocupação parcial por sorteio com semente fixa: cada horário tem sempre o mesmo resultado,
- *   então a agenda é a mesma em todo acesso e nos testes (que fixam a data de hoje).
- * - `ocupados`: horários já marcados em "Minhas consultas" (chaveDoHorario), que não aparecem livres.
- */
 import modelo from '@/dados/agenda-modelo.json'
 import { QUALQUER_PROFISSIONAL, buscarProfissional, profissionaisDaEspecialidade } from './catalogo'
 import { adicionarDias, diaDaSemana, ehFimDeSemana, formatarDataLonga } from '@/utils/datas'
 
 export interface Horario {
-  /** AAAA-MM-DD */
   data: string
-  /** HH:MM */
   hora: string
   profissionalId: string
 }
@@ -32,10 +21,8 @@ const agenda: ModeloAgenda = modelo
 const feriados = new Set(agenda.feriados)
 const NENHUM_OCUPADO: ReadonlySet<string> = new Set()
 
-/** Duração de cada consulta, em minutos (os turnos andam de 30 em 30). */
 export const DURACAO_CONSULTA_MIN = 30
 
-/** Número entre 0 e 1 sempre igual para o mesmo texto (FNV-1a de 32 bits). */
 function sorteioFixo(texto: string): number {
   let hash = 0x811c9dc5
   for (const caractere of texto) {
@@ -53,12 +40,10 @@ export function ehDiaUtil(iso: string): boolean {
   return !ehFimDeSemana(iso) && !feriados.has(iso)
 }
 
-/** De amanhã até hoje + 30 dias. */
 export function janelaDeAgendamento(hoje: string): { inicio: string; fim: string } {
   return { inicio: adicionarDias(hoje, 1), fim: adicionarDias(hoje, agenda.janelaDias) }
 }
 
-/** Dias úteis sem nenhuma vaga, contados a partir de hoje (1 = primeiro dia útil depois de hoje). */
 export function diasLotados(hoje: string): Set<string> {
   const { inicio, fim } = janelaDeAgendamento(hoje)
   const lotados = new Set<string>()
@@ -76,7 +61,6 @@ function horasDoProfissional(profissionalId: string, data: string): string[] {
   return turnos.flatMap((turno) => agenda.turnos[turno] ?? [])
 }
 
-/** Todos os horários livres dos profissionais, na janela, em ordem de data, hora e profissional. */
 export function gerarHorariosLivres(
   hoje: string,
   profissionalIds: string[],
@@ -106,10 +90,6 @@ function profissionaisDaEscolha(especialidadeId: string | null, profissionalId: 
   return profissional && profissional.especialidadeId === especialidadeId ? [profissional.id] : []
 }
 
-/**
- * Horários que a pessoa pode escolher na etapa 3. Com "Qualquer profissional", cada hora aparece
- * uma vez só, com o primeiro profissional livre naquela hora (na ordem do catálogo).
- */
 export function horariosParaEscolha(
   hoje: string,
   especialidadeId: string | null,
@@ -127,7 +107,6 @@ export function horariosParaEscolha(
   })
 }
 
-/** O horário guardado ainda serve? (Está na janela, livre e combina com a escolha da etapa 2.) */
 export function horarioAindaValido(
   horario: Horario,
   hoje: string,
@@ -158,7 +137,6 @@ export function horarioDaChave(chave: string): Horario | null {
   return data && hora && profissionalId ? { data, hora, profissionalId } : null
 }
 
-/** Lê um horário salvo (localStorage); null se não tiver o formato certo. */
 export function horarioDe(valor: unknown): Horario | null {
   if (typeof valor !== 'object' || valor === null) return null
   const h = valor as Record<string, unknown>
@@ -168,7 +146,6 @@ export function horarioDe(valor: unknown): Horario | null {
   return { data: h.data, hora: h.hora, profissionalId: h.profissionalId }
 }
 
-/** "quinta-feira, 19 de novembro, às 09:00" */
 export function descreverHorario(h: Horario): string {
   return `${formatarDataLonga(h.data)}, às ${h.hora}`
 }

@@ -2,12 +2,6 @@ import { defineStore } from 'pinia'
 import { computed, ref, watch } from 'vue'
 import { lerDados, salvarDados } from '@/servicos/armazenamento'
 
-/*
- * Preferências de acessibilidade. Ficam salvas no localStorage e viram atributos no <html>:
- * data-tema, data-espacamento, data-fonte, data-movimento e o font-size (tamanho do texto).
- * O script do index.html faz o mesmo antes da primeira pintura; manter os dois em sincronia.
- */
-
 export const TEMAS = ['claro', 'escuro', 'alto-contraste'] as const
 export type Tema = (typeof TEMAS)[number]
 
@@ -39,7 +33,6 @@ function temaDoSistemaSemAltoContraste(): Tema {
   return consultarMidia('(prefers-color-scheme: dark)') ? 'escuro' : 'claro'
 }
 
-/** Valores da primeira visita: vêm de prefers-contrast, prefers-color-scheme e prefers-reduced-motion. */
 export function preferenciasDoSistema(): Preferencias {
   return {
     tema: consultarMidia('(prefers-contrast: more)') ? 'alto-contraste' : temaDoSistemaSemAltoContraste(),
@@ -51,7 +44,6 @@ export function preferenciasDoSistema(): Preferencias {
   }
 }
 
-/** Aceita dados salvos; um campo inválido volta ao valor do sistema, sem descartar os outros. */
 export function validarPreferencias(dados: unknown): Preferencias | null {
   if (typeof dados !== 'object' || dados === null) return null
   const d = dados as Record<string, unknown>
@@ -86,7 +78,6 @@ export const useConfiguracoesStore = defineStore('configuracoes', () => {
   const fonteLegivel = ref(inicial.fonteLegivel)
   const reduzirMovimento = ref(inicial.reduzirMovimento)
   const dicasExtras = ref(inicial.dicasExtras)
-  /** true quando o navegador não deixou salvar: a tela de configurações avisa. */
   const salvamentoFalhou = ref(false)
 
   const preferencias = computed<Preferencias>(() => ({
@@ -98,7 +89,6 @@ export const useConfiguracoesStore = defineStore('configuracoes', () => {
     dicasExtras: dicasExtras.value,
   }))
 
-  // Aplica já na carga. Só salva quando a pessoa muda algo: enquanto isso, segue o sistema.
   aplicarPreferencias(preferencias.value)
   watch(
     preferencias,
@@ -111,7 +101,6 @@ export const useConfiguracoesStore = defineStore('configuracoes', () => {
 
   let temaAntesDoAltoContraste: Tema | null = null
 
-  /** Botão "Alto contraste" da barra eMAG: liga, ou volta ao tema que estava antes. */
   function alternarAltoContraste(): void {
     if (tema.value === 'alto-contraste') {
       tema.value = temaAntesDoAltoContraste ?? temaDoSistemaSemAltoContraste()

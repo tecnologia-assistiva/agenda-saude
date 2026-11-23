@@ -1,12 +1,4 @@
 <script setup lang="ts">
-/*
- * Minhas consultas: as próximas consultas, em ordem de data. O h1 é o título da lista.
- * - "Remarcar" é link (navega): a rota carrega a consulta no rascunho e abre a etapa 3.
- * - "Cancelar" abre o DialogoModal. Ao confirmar, a consulta sai da lista, a mensagem aparece na tela
- *   e na região de status, e o foco vai para o h1 (o botão que abriu o diálogo sumiu).
- * Os dois têm o visível no começo do nome acessível (2.5.3) e a data escondida no fim, para não
- * haver vários "Cancelar" iguais na lista de links e botões do leitor de tela.
- */
 import { ref } from 'vue'
 import { useAnunciador } from '@/composables/useAnunciador'
 import { nomeDaEspecialidade, nomeDoProfissional } from '@/servicos/catalogo'

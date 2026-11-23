@@ -5,7 +5,6 @@ import { montarApp, navegar } from './ajuda/montar-app'
 import { consulta, lerConsultasSalvas, salvarConsultas } from './ajuda/consultas'
 import { DADOS_VALIDOS, lerRascunhoSalvo } from './ajuda/rascunho'
 
-/* Data fixa: quarta-feira, 18/11/2026, 10h. */
 beforeEach(() => {
   vi.useFakeTimers({ toFake: ['Date'], shouldAdvanceTime: true })
   vi.setSystemTime(new Date(2026, 10, 18, 10, 0))
@@ -71,7 +70,6 @@ describe('Minhas consultas', () => {
     const cancelar = porTexto<HTMLButtonElement>('main li button', 'Cancelar')
     expect(texto(cancelar)).toBe('Cancelar a consulta de quarta-feira, 25 de novembro, às 09:00')
     expect(cancelar?.type).toBe('button')
-    // Só mostrar a lista não carrega nada no rascunho.
     expect(lerRascunhoSalvo()).toBeNull()
   })
 

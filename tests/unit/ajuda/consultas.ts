@@ -1,7 +1,6 @@
 import type { Consulta } from '@/stores/consultas'
 import { DADOS_VALIDOS } from './rascunho'
 
-/** Consulta pronta para os testes (data fixa: os testes fixam hoje em 18/11/2026). */
 export function consulta(parcial: Partial<Consulta> = {}): Consulta {
   return {
     protocolo: '1234-5678',
@@ -14,7 +13,6 @@ export function consulta(parcial: Partial<Consulta> = {}): Consulta {
   }
 }
 
-/** Grava as consultas no localStorage antes de montar o app. */
 export function salvarConsultas(lista: Consulta[]) {
   window.localStorage.setItem('agenda-saude:consultas', JSON.stringify({ versao: 1, dados: lista }))
 }

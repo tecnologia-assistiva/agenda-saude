@@ -11,7 +11,6 @@ const agendamento = useAgendamentoStore()
     <TituloPagina>Agendar consulta</TituloPagina>
     <p class="texto-destaque">Marque, veja ou cancele consultas na UBS Vila Esperança.</p>
     <p>
-      <!-- Com um agendamento pela metade, o mesmo botão leva de volta à etapa que falta. -->
       <RouterLink to="/agendar" class="botao botao--inicio">
         {{ agendamento.iniciado ? 'Continuar agendamento' : 'Começar agendamento' }}
       </RouterLink>

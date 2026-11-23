@@ -2,8 +2,6 @@ import type { LocationQuery, RouteLocationRaw, Router } from 'vue-router'
 import { useAgendamentoStore } from '@/stores/agendamento'
 import { useConsultasStore } from '@/stores/consultas'
 
-/* As 5 etapas do agendamento: uma rota cada, na ordem. */
-
 export interface Etapa {
   numero: number
   nome: string
@@ -20,7 +18,6 @@ export const ETAPAS: readonly Etapa[] = [
 
 export const TOTAL_ETAPAS = ETAPAS.length
 
-/** Valor de ?aviso= quando a pessoa tenta abrir uma etapa antes de completar as anteriores. */
 export const AVISO_ETAPA_INCOMPLETA = 'etapa-incompleta'
 
 export function etapa(numero: number): Etapa {
@@ -29,24 +26,16 @@ export function etapa(numero: number): Etapa {
   return encontrada
 }
 
-/** "Etapa 2 de 5" */
 export function legendaDaEtapa(numero: number): string {
   return `Etapa ${numero} de ${TOTAL_ETAPAS}`
 }
 
-/** "Etapa 2 de 5: Tipo de atendimento" (vai no <title>) */
 export function tituloDaEtapa(numero: number): string {
   return `${legendaDaEtapa(numero)}: ${etapa(numero).nome}`
 }
 
-/** Valor de ?retorno= nos links "Alterar" da revisão. */
 export const RETORNO_REVISAO = 'revisao'
 
-/**
- * Para onde ir ao enviar a etapa: a seguinte, ou de volta à revisão quando veio de lá ("Alterar").
- * Se a mudança apagou algo de uma etapa seguinte (trocar a especialidade apaga o horário), passa
- * antes por ela, ainda com ?retorno=revisao.
- */
 export function destinoAoContinuar(numero: number, query: LocationQuery): RouteLocationRaw {
   if (query.retorno !== RETORNO_REVISAO) return etapa(numero + 1).caminho
   const falta = useAgendamentoStore().primeiraEtapaIncompleta
@@ -57,11 +46,6 @@ export function caminhoDaPrimeiraEtapaIncompleta(): string {
   return etapa(useAgendamentoStore().primeiraEtapaIncompleta).caminho
 }
 
-/**
- * Não deixa abrir uma etapa antes de completar as anteriores (pelo endereço, pelo histórico ou por
- * um link antigo). Leva à primeira etapa incompleta, que mostra um aviso.
- * A confirmação (etapa 5) abre quando há uma consulta acabada de confirmar.
- */
 export function instalarGuardasDoAgendamento(router: Router): void {
   router.beforeEach((para) => {
     const numero = para.meta.etapa

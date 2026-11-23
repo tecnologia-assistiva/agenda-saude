@@ -4,10 +4,6 @@ import { defineComponent, h, ref } from 'vue'
 import { useAnunciador } from '@/composables/useAnunciador'
 import CalendarioDatas from '@/components/agendamento/CalendarioDatas.vue'
 
-/*
- * Calendário (padrão de grade de datas do APG). Hoje: quarta-feira, 18/11/2026.
- * Dias com horário: 19/11 (4), 25/11 (1) e 02/12 (3); os outros não têm vaga.
- */
 const LIVRES = new Map([
   ['2026-11-19', 4],
   ['2026-11-25', 1],
@@ -141,8 +137,8 @@ describe('calendário: teclado e tabindex móvel', () => {
   it('seta no fim do mês passa para o mês seguinte', async () => {
     montarCalendario()
     dia('2026-11-19')?.focus()
-    await teclar('End') // 21/11
-    for (let i = 0; i < 9; i++) await teclar('ArrowRight') // 30/11
+    await teclar('End')
+    for (let i = 0; i < 9; i++) await teclar('ArrowRight')
     expect(document.activeElement).toBe(dia('2026-11-30'))
     await teclar('ArrowRight')
     expect(titulo()).toBe('dezembro de 2026')

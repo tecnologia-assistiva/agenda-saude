@@ -1,11 +1,5 @@
-/*
- * Datas como texto "AAAA-MM-DD" (sem fuso horário) e formatação em pt-BR com Intl.
- * Tudo no horário local: o dia escolhido é o dia que a pessoa vê.
- */
-
 export interface MesAno {
   ano: number
-  /** 1 a 12 */
   mes: number
 }
 
@@ -51,7 +45,6 @@ export function somarMeses({ ano, mes }: MesAno, meses: number): MesAno {
   return { ano: Math.floor(total / 12), mes: (total % 12) + 1 }
 }
 
-/** Mesmo dia no outro mês; se o mês for mais curto, o último dia dele (31/01 → 28/02). */
 export function adicionarMeses(iso: string, meses: number): string {
   const data = deISO(iso)
   const destino = somarMeses(mesDe(iso), meses)
@@ -59,7 +52,6 @@ export function adicionarMeses(iso: string, meses: number): string {
   return paraISO(new Date(destino.ano, destino.mes - 1, dia))
 }
 
-/** 0 = domingo … 6 = sábado */
 export function diaDaSemana(iso: string): number {
   return deISO(iso).getDay()
 }
@@ -69,7 +61,6 @@ export function ehFimDeSemana(iso: string): boolean {
   return dia === 0 || dia === 6
 }
 
-/** Semanas do mês, começando no domingo; dias de outros meses viram null. */
 export function semanasDoMes(mesAno: MesAno): (string | null)[][] {
   const primeiro = new Date(mesAno.ano, mesAno.mes - 1, 1)
   const total = diasNoMes(mesAno)
@@ -86,22 +77,18 @@ const formatoCompleto = new Intl.DateTimeFormat('pt-BR', { weekday: 'long', day:
 const formatoDiaMes = new Intl.DateTimeFormat('pt-BR', { day: 'numeric', month: 'long' })
 const formatoMesAno = new Intl.DateTimeFormat('pt-BR', { month: 'long', year: 'numeric' })
 
-/** "quarta-feira, 25 de novembro" */
 export function formatarDataLonga(iso: string): string {
   return formatoLongo.format(deISO(iso))
 }
 
-/** "quarta-feira, 25 de novembro de 2026" (revisão e comprovante: o papel impresso precisa do ano) */
 export function formatarDataCompleta(iso: string): string {
   return formatoCompleto.format(deISO(iso))
 }
 
-/** "25 de novembro" */
 export function formatarDiaMes(iso: string): string {
   return formatoDiaMes.format(deISO(iso))
 }
 
-/** "novembro de 2026" */
 export function formatarMesAno({ ano, mes }: MesAno): string {
   return formatoMesAno.format(new Date(ano, mes - 1, 1))
 }

@@ -5,7 +5,6 @@ import { montarApp, navegar } from './ajuda/montar-app'
 import { lerConsultasSalvas } from './ajuda/consultas'
 import { DADOS_VALIDOS, lerRascunhoSalvo, salvarRascunho } from './ajuda/rascunho'
 
-/* Data fixa: quarta-feira, 18/11/2026, 10h. */
 beforeEach(() => {
   vi.useFakeTimers({ toFake: ['Date'], shouldAdvanceTime: true })
   vi.setSystemTime(new Date(2026, 10, 18, 10, 0))
@@ -141,7 +140,6 @@ describe('etapa 5: confirmação', () => {
     const link = [...document.querySelectorAll<HTMLAnchorElement>('main a')].find((a) => texto(a) === 'Adicionar à agenda')
     expect(link?.getAttribute('download')).toBe(`consulta-${protocolo}.ics`)
     expect(link?.getAttribute('href')).toMatch(/^data:text\/calendar;charset=utf-8,BEGIN%3AVCALENDAR/)
-    // Botões e links ficam fora do papel; a identificação do comprovante só sai no papel.
     expect(botao?.closest('.nao-imprimir')).not.toBeNull()
     expect(texto(document.querySelector('main .so-impressao'))).toContain('Comprovante de demonstração')
   })

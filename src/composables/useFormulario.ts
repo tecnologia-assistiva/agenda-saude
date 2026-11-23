@@ -2,15 +2,8 @@ import { computed, ref } from 'vue'
 import { definirTituloDocumento } from '@/router/foco-rota'
 import type { ErroDoResumo } from '@/components/formulario/ResumoErros.vue'
 
-/*
- * Validação ao enviar (nunca a cada tecla). Com erro: preenche `erros` (mensagem ao lado de cada
- * campo), monta a lista do resumo na ordem dos campos, soma uma `tentativa` (o ResumoErros recebe o
- * foco) e coloca "Erro: " no começo do <title>.
- */
-
 export interface CampoDoFormulario<C extends string> {
   chave: C
-  /** id do input ou do fieldset, para o link do resumo. */
   id: string
 }
 
@@ -29,7 +22,6 @@ export function useFormulario<C extends string>(opcoes: {
     }),
   )
 
-  /** Valida tudo. Devolve true se pode seguir. */
   function validarAoEnviar(): boolean {
     erros.value = opcoes.validar()
     tentativa.value += 1
