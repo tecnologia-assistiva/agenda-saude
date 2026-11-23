@@ -7,7 +7,7 @@ const itens = [
 </script>
 
 <template>
-  <nav id="menu" class="menu" aria-label="Menu principal" tabindex="-1">
+  <nav id="menu" class="menu" aria-label="Menu principal">
     <ul class="container menu__lista">
       <li v-for="item in itens" :key="item.para">
         <RouterLink v-slot="{ href, navigate, isActive, isExactActive }" :to="item.para" custom>

@@ -8,7 +8,7 @@ const { mensagemStatus, mensagemAlerta } = useAnunciador()
 
 <template>
   <CabecalhoSite />
-  <main id="conteudo" class="principal" tabindex="-1">
+  <main id="conteudo" class="principal">
     <div class="container">
       <RouterView />
     </div>

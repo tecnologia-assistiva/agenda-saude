@@ -5,6 +5,9 @@ import {
   formatarNome,
   formatarTelefone,
   interpretarData,
+  mascararCartaoSus,
+  mascararData,
+  mascararTelefone,
   normalizarTelefone,
 } from '@/utils/formatacao'
 
@@ -72,5 +75,54 @@ describe('cartão SUS e nome', () => {
 
   it('nome perde os espaços repetidos e das pontas', () => {
     expect(formatarNome('  Maria   da  Silva ')).toBe('Maria da Silva')
+  })
+})
+
+describe('máscara enquanto digita: só números, com limite', () => {
+  it.each([
+    ['1', '1'],
+    ['15', '15'],
+    ['150', '15/0'],
+    ['1503', '15/03'],
+    ['15031', '15/03/1'],
+    ['15031980', '15/03/1980'],
+    ['150319801', '15/03/1980'],
+    ['15/03/1980', '15/03/1980'],
+    ['15a03b1980', '15/03/1980'],
+    ['1980-03-15', '15/03/1980'],
+    ['abc', ''],
+  ])('data "%s" vira "%s"', (digitado, esperado) => {
+    expect(mascararData(digitado)).toBe(esperado)
+  })
+
+  it.each([
+    ['1', '(1'],
+    ['11', '(11'],
+    ['119', '(11) 9'],
+    ['113456', '(11) 3456'],
+    ['1134567', '(11) 3456-7'],
+    ['1134567890', '(11) 3456-7890'],
+    ['11987654321', '(11) 98765-4321'],
+    ['119876543210', '(11) 98765-4321'],
+    ['tel: 11 98765 4321', '(11) 98765-4321'],
+    ['+55 11 98765-4321', '(11) 98765-4321'],
+    ['+55 11 3456-7890', '(11) 3456-7890'],
+    ['011 98765-4321', '(11) 98765-4321'],
+    ['55987654321', '(55) 98765-4321'],
+    ['abc', ''],
+  ])('telefone "%s" vira "%s"', (digitado, esperado) => {
+    expect(mascararTelefone(digitado)).toBe(esperado)
+  })
+
+  it.each([
+    ['123', '123'],
+    ['1234', '123 4'],
+    ['12345678', '123 4567 8'],
+    ['123456789012345', '123 4567 8901 2345'],
+    ['1234567890123456789', '123 4567 8901 2345'],
+    ['123.4567.8901.2345', '123 4567 8901 2345'],
+    ['cartão 12a3', '123'],
+  ])('cartão SUS "%s" vira "%s"', (digitado, esperado) => {
+    expect(mascararCartaoSus(digitado)).toBe(esperado)
   })
 })

@@ -33,7 +33,7 @@ uma tarefa por tela, texto curto e linguagem simples.
 - **Configurações:** tema claro, escuro ou alto contraste; texto de 100% a 200%; mais espaço entre linhas e
   letras; fonte mais fácil de ler; reduzir animações; dicas extras. Na primeira visita, segue as
   preferências do aparelho.
-- **Barra de acessibilidade do eMAG** com atalhos (1 conteúdo, 2 menu, 4 rodapé) e botão de alto contraste.
+- **Barra de acessibilidade** com o link para a página de acessibilidade e o botão de alto contraste.
 - Rascunho salvo a cada mudança: voltar, recarregar ou fechar a página não apaga nada.
 
 ## Decisões de acessibilidade
@@ -41,10 +41,9 @@ uma tarefa por tela, texto curto e linguagem simples.
 | Decisão | Critérios WCAG |
 |---|---|
 | HTML nativo antes de ARIA: `header`, `nav`, `main`, `footer`, `fieldset`/`legend`, `<dialog>`, `<button>`, `<dl>`. | 1.3.1, 4.1.2 |
-| Links "Ir para o conteúdo/menu/rodapé" e atalhos do eMAG; o primeiro Tab cai em "Ir para o conteúdo". | 2.4.1, 2.1.1 |
 | A cada troca de página: título novo ("Etapa 2 de 5: Tipo de atendimento – Agenda Saúde") e foco no h1. | 2.4.2, 2.4.3, 4.1.3 |
 | Etapas: lista com "Etapa X de 5" e `aria-current="step"`; a legenda também fica dentro do h1. | 1.3.1, 2.4.6, 2.4.8 (AAA) |
-| Formulários: rótulo visível, "(obrigatório)/(opcional)" em texto, `autocomplete`, sem máscara (formata ao sair do campo), sem validar enquanto digita. | 1.3.5, 3.3.2, 3.2.2 |
+| Formulários: rótulo visível, "(obrigatório)/(opcional)" em texto, `autocomplete`, data, telefone e cartão SUS só com números e formatados enquanto a pessoa digita, sem validar enquanto digita. | 1.3.5, 3.3.2, 3.2.2 |
 | Erros: resumo no topo que recebe o foco, mensagem junto de cada campo dizendo como corrigir, "Erro:" no título. | 3.3.1, 3.3.3, 4.1.3 |
 | Revisão antes de confirmar e diálogo antes de cancelar ou apagar dados. | 3.3.4 |
 | Dados do último agendamento preenchidos; remarcar não pede os dados de novo. | 3.3.7 |
@@ -56,7 +55,7 @@ uma tarefa por tela, texto curto e linguagem simples.
 | Cabeçalho não fixo e margem de rolagem: o foco nunca fica escondido. | 2.4.11 |
 | Alvos com pelo menos 44 px (a área de toque do radio é a linha toda). | 2.5.8 |
 | Sem rolagem horizontal em 320 px, mesmo com texto em 200% e mais espaçamento. | 1.4.4, 1.4.10, 1.4.12 |
-| Rodapé com a ajuda sempre no mesmo lugar; menu e nomes iguais em todas as páginas. | 3.2.3, 3.2.4, 3.2.6 |
+| Menu e nomes iguais em todas as páginas. | 3.2.3, 3.2.4 |
 | Nome acessível começa pelo texto visível ("Cancelar a consulta de…"). | 2.5.3, 2.4.4 |
 | Sem tempo limite e sem CAPTCHA. | 2.2.1 |
 
@@ -98,7 +97,7 @@ Na primeira vez, instale o navegador dos e2e: `npx playwright install chromium` 
 
 ```text
 src/
-  components/   layout/ (cabeçalho, barra eMAG, menu, rodapé), comum/ (título, dica, diálogo),
+  components/   layout/ (cabeçalho, barra de acessibilidade, menu, rodapé), comum/ (título, dica, diálogo),
                 formulario/ (campo, grupo de opções, resumo de erros), agendamento/ (etapas, calendário)
   views/        uma tela por rota; agendar/ tem as 5 etapas
   router/       rotas, guardas das etapas e foco na troca de página
@@ -121,8 +120,7 @@ tests/
 
 - Não há servidor: as consultas e os dados ficam no `localStorage` do navegador. Trocar de aparelho ou limpar
   os dados do navegador apaga tudo.
-- Não há tradução para Libras, e a ajuda do rodapé é só por telefone (fictício).
-- Os atalhos com número (eMAG) podem coincidir com atalhos do navegador ou do leitor de tela.
+- Não há tradução para Libras.
 - Em 320 px com texto em 200% e espaçamento ampliado, palavras longas como "Configurações" podem quebrar no
   meio (não há rolagem horizontal).
 - O `.ics` usa a hora local do aparelho, sem fuso.

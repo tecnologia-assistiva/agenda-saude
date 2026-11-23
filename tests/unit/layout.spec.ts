@@ -37,11 +37,9 @@ describe('layout: estrutura', () => {
     expect(document.querySelectorAll('[role="alert"]')).toHaveLength(1)
   })
 
-  it('o aviso de demonstração fica numa faixa no topo e numa linha no rodapé, fora do conteúdo', async () => {
+  it('o aviso acadêmico fica só numa linha no rodapé, fora do conteúdo', async () => {
     await montarApp('/')
-    expect(document.querySelector('header')?.textContent).toContain(
-      'Site de demonstração: projeto acadêmico com dados fictícios.',
-    )
+    expect(document.querySelector('header')?.textContent).not.toContain('demonstração')
     expect(document.querySelector('footer')?.textContent).toContain('Projeto acadêmico')
     expect(document.querySelector('main')?.textContent).not.toContain('demonstração')
   })
@@ -51,16 +49,16 @@ describe('layout: estrutura', () => {
     expect(document.querySelector('header nav#menu')).not.toBeNull()
   })
 
-  it('rodapé enxuto: links de ajuda, telefone e projeto acadêmico, sem títulos', async () => {
+  it('rodapé enxuto: dois links e a linha do projeto acadêmico, sem telefone nem títulos', async () => {
     await montarApp('/')
     const rodape = document.querySelector('footer')
     const links = [...(rodape?.querySelectorAll('a') ?? [])].map((a) => a.textContent?.trim())
     expect(links).toEqual(['Acessibilidade', 'Configurações'])
-    expect(rodape?.textContent).toContain('0800 000 0000')
+    expect(rodape?.textContent).not.toMatch(/telefone|0800/i)
     expect(rodape?.querySelectorAll('h1, h2, h3')).toHaveLength(0)
   })
 
-  it('o rodapé é igual em todas as páginas (ajuda no mesmo lugar, WCAG 3.2.6)', async () => {
+  it('o rodapé é igual em todas as páginas', async () => {
     const conteudos = []
     for (const caminho of ['/', '/configuracoes', '/acessibilidade', '/nao-existe']) {
       await montarApp(caminho)
@@ -88,42 +86,14 @@ describe('layout: estrutura', () => {
   })
 })
 
-describe('barra de acessibilidade (eMAG)', () => {
-  it('o primeiro elemento do Tab é "Ir para o conteúdo [1]"', async () => {
+describe('barra de acessibilidade', () => {
+  it('sem links de pulo nem accesskey: o primeiro elemento do Tab é o link "Acessibilidade"', async () => {
     await montarApp('/')
     const primeiro = document.querySelector<HTMLElement>(SELETOR_FOCAVEL)
-    expect(primeiro?.textContent?.trim()).toBe('Ir para o conteúdo [1]')
-    expect(primeiro?.getAttribute('href')).toBe('#conteudo')
-  })
-
-  it('atalhos 1, 2 e 4 levam a main, nav e footer, que podem receber foco', async () => {
-    await montarApp('/')
-    const esperado: Record<string, string> = { '1': 'MAIN', '2': 'NAV', '4': 'FOOTER' }
-    const atalhos = [...document.querySelectorAll<HTMLAnchorElement>('a[accesskey]')]
-    expect(atalhos.map((a) => a.accessKey)).toEqual(['1', '2', '4'])
-    for (const atalho of atalhos) {
-      const destino = document.querySelector<HTMLElement>(atalho.getAttribute('href') ?? '')
-      expect(destino?.tagName).toBe(esperado[atalho.accessKey])
-      expect(destino?.getAttribute('tabindex')).toBe('-1')
-    }
-  })
-
-  it('tela estreita: a palavra visível ("Conteúdo") está no nome acessível, que mantém "Ir para o" (2.5.3)', async () => {
-    await montarApp('/')
-    const atalhos = [...document.querySelectorAll<HTMLAnchorElement>('a.atalho')]
-    expect(atalhos.map((a) => a.querySelector('.atalho__alvo')?.textContent)).toEqual(['conteúdo', 'menu', 'rodapé'])
-    for (const atalho of atalhos) {
-      const prefixo = atalho.querySelector('.atalho__prefixo')
-      expect(prefixo?.textContent).toBe('Ir para o ')
-      expect(prefixo?.closest('[aria-hidden]')).toBeNull()
-      const alvo = atalho.querySelector('.atalho__alvo')?.textContent ?? ''
-      expect(atalho.textContent?.toLowerCase()).toContain(alvo)
-    }
-  })
-
-  it('o 3 fica reservado para a busca', async () => {
-    await montarApp('/')
-    expect(document.querySelector('[accesskey="3"]')).toBeNull()
+    expect(primeiro?.textContent?.trim()).toBe('Acessibilidade')
+    expect(primeiro?.closest('.barra-acessibilidade')).not.toBeNull()
+    expect(document.querySelector('[accesskey]')).toBeNull()
+    expect(document.querySelector('a[href^="#"]')).toBeNull()
   })
 
   it('tem link para a página de acessibilidade', async () => {

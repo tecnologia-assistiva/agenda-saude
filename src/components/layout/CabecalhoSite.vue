@@ -10,17 +10,12 @@ import MenuPrincipal from './MenuPrincipal.vue'
       <div class="container cabecalho__conteudo">
         <p class="cabecalho__servico">
           <RouterLink to="/" class="cabecalho__nome">Agenda Saúde</RouterLink>
-          <span class="cabecalho__unidade">UBS Vila Esperança</span>
+          <span class="cabecalho__unidade">UBS Ponta Grossa</span>
         </p>
         <RouterLink to="/configuracoes" class="cabecalho__configuracoes">Configurações</RouterLink>
       </div>
     </div>
     <MenuPrincipal />
-    <div class="faixa-demonstracao">
-      <p class="container faixa-demonstracao__texto">
-        <strong>Site de demonstração:</strong> projeto acadêmico com dados fictícios.
-      </p>
-    </div>
   </header>
 </template>
 
@@ -88,14 +83,5 @@ import MenuPrincipal from './MenuPrincipal.vue'
   border-color: var(--cor-foco-fundo);
   color: var(--cor-foco-texto);
   text-decoration: none;
-}
-
-.faixa-demonstracao {
-  border-bottom: 0.0625rem solid var(--cor-separador);
-}
-
-.faixa-demonstracao__texto {
-  margin-block: 0;
-  padding-block: var(--espaco-2);
 }
 </style>

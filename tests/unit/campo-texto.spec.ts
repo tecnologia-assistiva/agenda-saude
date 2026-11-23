@@ -3,7 +3,7 @@ import { createPinia, setActivePinia } from 'pinia'
 import { beforeEach, describe, expect, it } from 'vitest'
 import { defineComponent, h, ref } from 'vue'
 import { useConfiguracoesStore } from '@/stores/configuracoes'
-import { formatarData } from '@/utils/formatacao'
+import { formatarData, mascararData } from '@/utils/formatacao'
 import CampoTexto from '@/components/formulario/CampoTexto.vue'
 
 type Props = Record<string, unknown>
@@ -72,7 +72,7 @@ describe('CampoTexto', () => {
     expect(entrada().attributes('aria-describedby')).toBe('data-nascimento-dica')
   })
 
-  it('sem máscara: o texto não muda enquanto digita; formata só ao sair do campo', async () => {
+  it('sem máscara (como no nome): o texto não muda enquanto digita; formata só ao sair do campo', async () => {
     const { entrada, valor } = montarCampo({ formatar: formatarData })
     await entrada().setValue('15031980')
     expect(valor.value).toBe('15031980')
@@ -82,12 +82,31 @@ describe('CampoTexto', () => {
     expect((entrada().element as HTMLInputElement).value).toBe('15/03/1980')
   })
 
-  it('aceita colar qualquer texto (nada bloqueia o valor colado)', async () => {
+  it('sem máscara: aceita colar qualquer texto e formata ao sair do campo', async () => {
     const { entrada, valor } = montarCampo({ formatar: formatarData })
     await entrada().setValue('1980-03-15')
     expect(valor.value).toBe('1980-03-15')
     await entrada().trigger('blur')
     expect(valor.value).toBe('15/03/1980')
+  })
+
+  it('com máscara: tira o que não é número, limita o tamanho e formata enquanto digita', async () => {
+    const { entrada, valor } = montarCampo({ mascarar: mascararData })
+    await entrada().setValue('15a03b1980999')
+    expect(valor.value).toBe('15/03/1980')
+    expect((entrada().element as HTMLInputElement).value).toBe('15/03/1980')
+  })
+
+  it('com máscara: digitar no meio deixa o cursor logo depois do número digitado', async () => {
+    const { entrada, valor } = montarCampo({ mascarar: mascararData }, '15/03')
+    const campo = entrada().element as HTMLInputElement
+    campo.focus()
+    campo.value = '151/03'
+    campo.setSelectionRange(3, 3)
+    await entrada().trigger('input')
+    expect(campo.value).toBe('15/10/3')
+    expect(valor.value).toBe('15/10/3')
+    expect(campo.selectionStart).toBe(4)
   })
 
   it('repassa autocomplete, inputmode e tipo', () => {

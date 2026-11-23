@@ -1,8 +1,5 @@
 <script setup lang="ts">
 import TituloPagina from '@/components/comum/TituloPagina.vue'
-
-const REPOSITORIO = 'https://github.com/tecnologia-assistiva/agenda-saude'
-const ENDERECO_CHAMADOS = `${REPOSITORIO}/issues`
 </script>
 
 <template>
@@ -26,42 +23,11 @@ const ENDERECO_CHAMADOS = `${REPOSITORIO}/issues`
 
     <h2>Recursos</h2>
     <ul>
-      <li>Atalhos no topo para o conteúdo, o menu e o rodapé.</li>
       <li>Temas claro, escuro e alto contraste.</li>
       <li>Texto até 200%, mais espaço entre linhas e fonte mais fácil de ler.</li>
       <li>Sem tempo limite e sem CAPTCHA.</li>
       <li>Lista dos próximos horários livres, para quem não quer usar o calendário.</li>
     </ul>
-
-    <h2>Atalhos de teclado</h2>
-    <p>
-      Use <kbd>Alt</kbd> + número no Chrome e no Edge, <kbd>Alt</kbd> + <kbd>Shift</kbd> + número no Firefox
-      ou <kbd>Control</kbd> + <kbd>Option</kbd> + número no Safari do Mac.
-    </p>
-    <table>
-      <caption>Atalhos da barra do topo</caption>
-      <thead>
-        <tr>
-          <th scope="col">Número</th>
-          <th scope="col">Vai para</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><kbd>1</kbd></td>
-          <td>Conteúdo</td>
-        </tr>
-        <tr>
-          <td><kbd>2</kbd></td>
-          <td>Menu</td>
-        </tr>
-        <tr>
-          <td><kbd>4</kbd></td>
-          <td>Rodapé</td>
-        </tr>
-      </tbody>
-    </table>
-    <p>O 3 fica reservado para a busca, como no eMAG.</p>
 
     <h2>Calendário</h2>
     <p>
@@ -100,18 +66,10 @@ const ENDERECO_CHAMADOS = `${REPOSITORIO}/issues`
     <ul>
       <li>Os dados ficam só neste navegador. Limpar os dados do navegador apaga as consultas.</li>
       <li>Não há tradução para Libras.</li>
-      <li>A ajuda do rodapé é só por telefone (fictício).</li>
-      <li>Os atalhos com número podem coincidir com atalhos do navegador ou do leitor de tela.</li>
       <li>
         Em tela de 320 px com texto em 200% e mais espaço entre letras, palavras longas, como “Configurações”,
         podem quebrar no meio.
       </li>
     </ul>
-
-    <h2>Como relatar um problema</h2>
-    <p>
-      <a :href="ENDERECO_CHAMADOS">Abra um chamado no GitHub</a> dizendo a página, o que tentou fazer e a
-      tecnologia assistiva que usa.
-    </p>
   </div>
 </template>

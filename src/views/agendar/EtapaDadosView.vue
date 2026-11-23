@@ -5,7 +5,15 @@ import { useAnunciador } from '@/composables/useAnunciador'
 import { useFormulario } from '@/composables/useFormulario'
 import { destinoAoContinuar, legendaDaEtapa } from '@/router/etapas'
 import { useAgendamentoStore } from '@/stores/agendamento'
-import { formatarCartaoSus, formatarData, formatarNome, formatarTelefone } from '@/utils/formatacao'
+import {
+  formatarCartaoSus,
+  formatarData,
+  formatarNome,
+  formatarTelefone,
+  mascararCartaoSus,
+  mascararData,
+  mascararTelefone,
+} from '@/utils/formatacao'
 import { validarDadosPessoais } from '@/utils/validacao'
 import TituloPagina from '@/components/comum/TituloPagina.vue'
 import DialogoModal from '@/components/comum/DialogoModal.vue'
@@ -97,6 +105,7 @@ function continuar() {
       largura="curta"
       :erro="erros.dataNascimento"
       :formatar="formatarData"
+      :mascarar="mascararData"
     />
     <CampoTexto
       id="telefone"
@@ -108,6 +117,7 @@ function continuar() {
       largura="media"
       :erro="erros.telefone"
       :formatar="formatarTelefone"
+      :mascarar="mascararTelefone"
     />
     <CampoTexto
       id="cartao-sus"
@@ -120,6 +130,7 @@ function continuar() {
       largura="media"
       :erro="erros.cartaoSus"
       :formatar="formatarCartaoSus"
+      :mascarar="mascararCartaoSus"
     />
     <NavegacaoEtapa voltar-para="/" />
   </form>
