@@ -82,12 +82,18 @@ export function semanasDoMes(mesAno: MesAno): (string | null)[][] {
 }
 
 const formatoLongo = new Intl.DateTimeFormat('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' })
+const formatoCompleto = new Intl.DateTimeFormat('pt-BR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
 const formatoDiaMes = new Intl.DateTimeFormat('pt-BR', { day: 'numeric', month: 'long' })
 const formatoMesAno = new Intl.DateTimeFormat('pt-BR', { month: 'long', year: 'numeric' })
 
 /** "quarta-feira, 25 de novembro" */
 export function formatarDataLonga(iso: string): string {
   return formatoLongo.format(deISO(iso))
+}
+
+/** "quarta-feira, 25 de novembro de 2026" (revisão e comprovante: o papel impresso precisa do ano) */
+export function formatarDataCompleta(iso: string): string {
+  return formatoCompleto.format(deISO(iso))
 }
 
 /** "25 de novembro" */

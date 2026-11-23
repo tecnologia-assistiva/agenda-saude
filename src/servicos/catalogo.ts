@@ -43,3 +43,13 @@ export function profissionalValido(especialidadeId: string | null, profissionalI
   if (profissionalId === QUALQUER_PROFISSIONAL) return true
   return buscarProfissional(profissionalId)?.especialidadeId === especialidadeId
 }
+
+export function nomeDaEspecialidade(id: string | null): string {
+  return buscarEspecialidade(id)?.nome ?? ''
+}
+
+/** Nome do profissional, ou "Qualquer profissional" para essa escolha da etapa 2. */
+export function nomeDoProfissional(id: string | null): string {
+  if (id === QUALQUER_PROFISSIONAL) return 'Qualquer profissional'
+  return buscarProfissional(id)?.nome ?? ''
+}

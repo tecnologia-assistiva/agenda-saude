@@ -4,6 +4,7 @@
  * aria-current="step" na atual. Etapas concluídas mostram "concluída" (texto, não só cor) e são
  * links para voltar a elas. O nome acessível de cada link começa pelo texto visível (2.5.3).
  * Em tela estreita a lista some: a legenda "Etapa X de 5" do h1 cumpre o papel sem ocupar espaço.
+ * Na confirmação, as 4 anteriores aparecem concluídas, mas sem link (o rascunho já foi apagado).
  */
 import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
@@ -13,12 +14,15 @@ import { useAgendamentoStore } from '@/stores/agendamento'
 const props = defineProps<{ atual: number }>()
 const agendamento = useAgendamentoStore()
 
+const naConfirmacao = computed(() => props.atual === TOTAL_ETAPAS)
+
 const itens = computed(() =>
-  ETAPAS.map((e) => ({
-    ...e,
-    atual: e.numero === props.atual,
-    concluida: e.numero !== props.atual && agendamento.etapaCompleta(e.numero),
-  })),
+  ETAPAS.map((e) => {
+    const concluida = naConfirmacao.value
+      ? e.numero < props.atual
+      : e.numero !== props.atual && agendamento.etapaCompleta(e.numero)
+    return { ...e, atual: e.numero === props.atual, concluida, link: concluida && !naConfirmacao.value }
+  }),
 )
 </script>
 
@@ -31,7 +35,7 @@ const itens = computed(() =>
       :class="{ 'etapas__item--atual': item.atual, 'etapas__item--concluida': item.concluida }"
       :aria-current="item.atual ? 'step' : undefined"
     >
-      <component :is="item.concluida ? RouterLink : 'span'" :to="item.concluida ? item.caminho : undefined" class="etapas__conteudo">
+      <component :is="item.link ? RouterLink : 'span'" :to="item.link ? item.caminho : undefined" class="etapas__conteudo">
         <span class="etapas__numero">Etapa {{ item.numero }} de {{ TOTAL_ETAPAS }}<span class="visualmente-oculto">: </span></span>
         <span class="etapas__nome">{{ item.nome }}</span>
         <span v-if="item.concluida" class="etapas__estado"><span class="visualmente-oculto">, </span>concluída</span>

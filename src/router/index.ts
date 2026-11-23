@@ -7,8 +7,10 @@ import {
   type RouterScrollBehavior,
 } from 'vue-router'
 import InicioView from '@/views/InicioView.vue'
+import { useAgendamentoStore } from '@/stores/agendamento'
+import { useConsultasStore } from '@/stores/consultas'
 import { instalarFocoNaTrocaDeRota } from './foco-rota'
-import { ETAPAS, caminhoDaPrimeiraEtapaIncompleta, instalarGuardasDoAgendamento, tituloDaEtapa } from './etapas'
+import { ETAPAS, caminhoDaPrimeiraEtapaIncompleta, etapa, instalarGuardasDoAgendamento, tituloDaEtapa } from './etapas'
 
 declare module 'vue-router' {
   interface RouteMeta {
@@ -19,15 +21,14 @@ declare module 'vue-router' {
   }
 }
 
-const EtapaPendenteView = () => import('@/views/agendar/EtapaPendenteView.vue')
+const MinhasConsultasView = () => import('@/views/MinhasConsultasView.vue')
 
-/** Tela de cada etapa. As etapas 4 e 5 ganham a tela própria na etapa 4 do projeto. */
 const TELAS_DAS_ETAPAS: Record<number, () => Promise<RouteComponent>> = {
   1: () => import('@/views/agendar/EtapaDadosView.vue'),
   2: () => import('@/views/agendar/EtapaAtendimentoView.vue'),
   3: () => import('@/views/agendar/EtapaDataHorarioView.vue'),
-  4: EtapaPendenteView,
-  5: EtapaPendenteView,
+  4: () => import('@/views/agendar/EtapaRevisaoView.vue'),
+  5: () => import('@/views/agendar/EtapaConfirmacaoView.vue'),
 }
 
 export const rotas: RouteRecordRaw[] = [
@@ -44,6 +45,21 @@ export const rotas: RouteRecordRaw[] = [
         meta: { titulo: tituloDaEtapa(e.numero), etapa: e.numero },
       })),
     ],
+  },
+  { path: '/minhas-consultas', name: 'minhas-consultas', component: MinhasConsultasView, meta: { titulo: 'Minhas consultas' } },
+  {
+    // "Remarcar" é um link para cá: carrega a consulta no rascunho (mesmo protocolo) e abre a etapa 3,
+    // com as etapas 1 e 2 já prontas (WCAG 3.3.7). A tela nunca aparece: a guarda sempre redireciona.
+    path: '/minhas-consultas/remarcar/:protocolo',
+    name: 'remarcar',
+    component: MinhasConsultasView,
+    meta: { titulo: 'Minhas consultas' },
+    beforeEnter: (para) => {
+      const consulta = useConsultasStore().buscar(String(para.params.protocolo))
+      if (!consulta) return { name: 'minhas-consultas' }
+      useAgendamentoStore().carregarConsulta(consulta)
+      return etapa(3).caminho
+    },
   },
   {
     path: '/configuracoes',

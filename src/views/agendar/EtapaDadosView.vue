@@ -2,23 +2,42 @@
 /*
  * Etapa 1: dados pessoais. Os campos editam o rascunho direto (nada se perde ao voltar).
  * Validação só ao enviar; antes, formata o que foi colado e ainda não saiu do campo.
+ * Num agendamento novo, os campos já vêm com os dados do último (WCAG 3.3.7), com aviso e a opção
+ * "Apagar meus dados", que pede confirmação no DialogoModal.
  */
+import { ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useAnunciador } from '@/composables/useAnunciador'
 import { useFormulario } from '@/composables/useFormulario'
 import { destinoAoContinuar, legendaDaEtapa } from '@/router/etapas'
 import { useAgendamentoStore } from '@/stores/agendamento'
 import { formatarCartaoSus, formatarData, formatarNome, formatarTelefone } from '@/utils/formatacao'
 import { validarDadosPessoais } from '@/utils/validacao'
 import TituloPagina from '@/components/comum/TituloPagina.vue'
+import DialogoModal from '@/components/comum/DialogoModal.vue'
 import CampoTexto from '@/components/formulario/CampoTexto.vue'
 import ResumoErros from '@/components/formulario/ResumoErros.vue'
 import AvisoEtapaIncompleta from '@/components/agendamento/AvisoEtapaIncompleta.vue'
+import AvisoRemarcacao from '@/components/agendamento/AvisoRemarcacao.vue'
 import NavegacaoEtapa from '@/components/agendamento/NavegacaoEtapa.vue'
 
 const route = useRoute()
 const router = useRouter()
 const agendamento = useAgendamentoStore()
+const { anunciar } = useAnunciador()
 const dados = agendamento.rascunho.dados
+
+agendamento.preencherComDadosSalvos()
+/** O diálogo só existe na tela quando há dados salvos para apagar. */
+const temDialogo = agendamento.rascunho.usouDadosSalvos
+const dialogo = ref<InstanceType<typeof DialogoModal> | null>(null)
+const dadosApagados = ref(false)
+
+function apagarDados() {
+  agendamento.apagarDadosPessoais()
+  dadosApagados.value = true
+  anunciar('Seus dados foram apagados.')
+}
 
 const { erros, listaErros, tentativa, validarAoEnviar } = useFormulario({
   campos: [
@@ -43,6 +62,24 @@ function continuar() {
 <template>
   <TituloPagina :legenda="legendaDaEtapa(1)">Seus dados</TituloPagina>
   <AvisoEtapaIncompleta />
+  <AvisoRemarcacao />
+  <div v-if="agendamento.rascunho.usouDadosSalvos" class="dados-salvos">
+    <p>Usamos os dados do seu último agendamento.</p>
+    <button type="button" class="botao botao--secundario" @click="dialogo?.abrir($event.currentTarget)">
+      Apagar meus dados
+    </button>
+  </div>
+  <p v-else-if="dadosApagados" class="texto-atencao">Seus dados foram apagados.</p>
+  <DialogoModal
+    v-if="temDialogo"
+    ref="dialogo"
+    titulo="Apagar seus dados?"
+    confirmar="Sim, apagar meus dados"
+    manter="Não, manter meus dados"
+    @confirmar="apagarDados"
+  >
+    <p>Os campos ficam em branco e o site esquece seus dados. As consultas marcadas não mudam.</p>
+  </DialogoModal>
   <form novalidate @submit.prevent="continuar">
     <ResumoErros :erros="listaErros" :tentativa="tentativa" />
     <CampoTexto
@@ -94,3 +131,13 @@ function continuar() {
     <NavegacaoEtapa voltar-para="/" />
   </form>
 </template>
+
+<style scoped>
+.dados-salvos {
+  margin-bottom: var(--espaco-6);
+}
+
+.dados-salvos p {
+  margin-bottom: var(--espaco-3);
+}
+</style>

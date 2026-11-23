@@ -266,6 +266,15 @@ textarea {
   text-decoration: none;
 }
 
+/* Linha de ações (botões e links lado a lado; quebram linha em tela estreita). */
+.acoes {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--espaco-3) var(--espaco-5);
+  margin-bottom: var(--espaco-paragrafo);
+}
+
 /* ---------- Grupos de opções (radio e checkbox nativos) ---------- */
 
 fieldset {
@@ -516,6 +525,36 @@ td {
 
 th {
   font-weight: 700;
+}
+
+/* ---------- Impressão (comprovante da confirmação) ----------
+ * Só o conteúdo: sem cabeçalho (barra eMAG, faixa, menu), rodapé, indicador de etapas e botões.
+ * As cores do papel ficam em tokens.css (sempre o tema claro).
+ */
+
+.so-impressao {
+  display: none;
+}
+
+@media print {
+  .cabecalho,
+  .rodape,
+  .etapas,
+  .nao-imprimir {
+    display: none !important;
+  }
+
+  .so-impressao {
+    display: block;
+  }
+
+  body {
+    font-size: 12pt;
+  }
+
+  .legenda-etapa {
+    display: none;
+  }
 }
 
 /* ---------- Modo de cores forçadas (Windows) ---------- */
