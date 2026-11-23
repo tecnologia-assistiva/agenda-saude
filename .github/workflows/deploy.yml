@@ -1,0 +1,62 @@
+# Testes + build + publicação no GitHub Pages.
+# Em pull request: só lint, testes e build. Na main (ou manualmente): publica.
+# Requer em Settings → Pages → "Build and deployment" → Source: "GitHub Actions".
+name: Testar e publicar
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Não interrompe uma publicação em andamento; em pull request, a execução nova substitui a antiga.
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  testar-e-construir:
+    name: Testar e construir
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+      - run: npm run lint
+      - run: npm test
+
+      # O base path é o nome do repositório: /agenda-saude/
+      - name: Build de produção
+        run: npm run build
+        env:
+          BASE_PATH: /${{ github.event.repository.name }}/
+
+      - name: Enviar o site para o Pages
+        if: github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: dist
+
+  publicar:
+    name: Publicar no GitHub Pages
+    if: github.event_name != 'pull_request'
+    needs: testar-e-construir
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.publicacao.outputs.page_url }}
+    steps:
+      - uses: actions/configure-pages@v6
+      - id: publicacao
+        uses: actions/deploy-pages@v5

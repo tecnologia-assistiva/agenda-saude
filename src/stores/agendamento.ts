@@ -2,6 +2,8 @@ import { defineStore } from 'pinia'
 import { computed, reactive, ref, watch } from 'vue'
 import { lerDados, removerDados, salvarDados } from '@/servicos/armazenamento'
 import { profissionalValido } from '@/servicos/catalogo'
+import { horarioAindaValido, type Horario } from '@/servicos/horarios'
+import { hojeISO } from '@/utils/datas'
 import { validarDadosPessoais, type DadosPessoais } from '@/utils/validacao'
 
 /*
@@ -10,14 +12,8 @@ import { validarDadosPessoais, type DadosPessoais } from '@/utils/validacao'
  * apaga nada. Uma etapa está completa quando os dados dela são válidos.
  */
 
-export interface HorarioEscolhido {
-  /** AAAA-MM-DD */
-  data: string
-  /** HH:MM */
-  hora: string
-  /** Profissional que vai atender (útil quando a escolha foi "Qualquer profissional"). */
-  profissionalId: string
-}
+/** O profissional do horário é quem vai atender (importa quando a escolha foi "Qualquer profissional"). */
+export type HorarioEscolhido = Horario
 
 export interface Rascunho {
   dados: DadosPessoais
@@ -83,7 +79,10 @@ export const useAgendamentoStore = defineStore('agendamento', () => {
   const etapasCompletas = computed<Record<number, boolean>>(() => ({
     1: Object.keys(validarDadosPessoais(rascunho.dados)).length === 0,
     2: profissionalValido(rascunho.especialidadeId, rascunho.profissionalId),
-    3: rascunho.horario !== null,
+    // Um horário antigo (que já passou ou deixou de combinar com a etapa 2) não completa a etapa 3.
+    3:
+      rascunho.horario !== null &&
+      horarioAindaValido(rascunho.horario, hojeISO(), rascunho.especialidadeId, rascunho.profissionalId),
     // A revisão só se completa ao confirmar a consulta (etapa 4 do projeto).
     4: false,
     5: false,

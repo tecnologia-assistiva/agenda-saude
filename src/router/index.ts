@@ -21,11 +21,11 @@ declare module 'vue-router' {
 
 const EtapaPendenteView = () => import('@/views/agendar/EtapaPendenteView.vue')
 
-/** Tela de cada etapa. As etapas 3 a 5 ganham a tela própria nas próximas etapas do projeto. */
+/** Tela de cada etapa. As etapas 4 e 5 ganham a tela própria na etapa 4 do projeto. */
 const TELAS_DAS_ETAPAS: Record<number, () => Promise<RouteComponent>> = {
   1: () => import('@/views/agendar/EtapaDadosView.vue'),
   2: () => import('@/views/agendar/EtapaAtendimentoView.vue'),
-  3: EtapaPendenteView,
+  3: () => import('@/views/agendar/EtapaDataHorarioView.vue'),
   4: EtapaPendenteView,
   5: EtapaPendenteView,
 }
