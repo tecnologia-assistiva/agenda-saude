@@ -1,22 +1,35 @@
 <script setup lang="ts">
-/* Declaração de acessibilidade (versão inicial; a final sai na etapa 6, com os resultados dos testes). */
+/*
+ * Declaração de acessibilidade (versão final): conformidade, data e método da avaliação, recursos,
+ * atalhos, a adaptação do calendário, limitações conhecidas e como relatar um problema.
+ * A situação ("parcialmente conforme") é revista depois da avaliação manual (docs/avaliacao-wcag.md).
+ */
 import TituloPagina from '@/components/comum/TituloPagina.vue'
 
-const ENDERECO_CHAMADOS = 'https://github.com/tecnologia-assistiva/agenda-saude/issues'
+const REPOSITORIO = 'https://github.com/tecnologia-assistiva/agenda-saude'
+const ENDERECO_CHAMADOS = `${REPOSITORIO}/issues`
+const ENDERECO_RELATORIO = `${REPOSITORIO}/blob/main/docs/avaliacao-wcag.md`
 </script>
 
 <template>
   <div class="coluna-leitura">
     <TituloPagina>Sobre a acessibilidade</TituloPagina>
     <p>Este site foi feito para funcionar com leitor de tela, só com teclado, com acionador e com zoom.</p>
-    <p>Última revisão: novembro de 2026.</p>
 
     <h2>Conformidade</h2>
     <p>Seguimos a WCAG 2.2 (nível AA), o eMAG 3.1 e a ABNT NBR 17060:2022.</p>
-    <p>
-      O site está <strong>parcialmente conforme</strong>: os testes com NVDA, VoiceOver e Controle Assistivo
-      ainda estão em andamento.
-    </p>
+    <p>Situação: <strong>parcialmente conforme</strong>, pelas limitações descritas abaixo.</p>
+
+    <h2>Como avaliamos</h2>
+    <p>Última avaliação: novembro de 2026.</p>
+    <ul>
+      <li>
+        Automática: axe em todas as telas e nos 3 temas, mais testes de teclado, foco, largura de 320 px e
+        impressão. Roda a cada mudança, antes de publicar.
+      </li>
+      <li>Manual: com NVDA no Windows, VoiceOver e Controle Assistivo no iPhone, e só com teclado.</li>
+    </ul>
+    <p><a :href="ENDERECO_RELATORIO">Veja o relatório de avaliação</a>.</p>
 
     <h2>Recursos</h2>
     <ul>
@@ -57,7 +70,11 @@ const ENDERECO_CHAMADOS = 'https://github.com/tecnologia-assistiva/agenda-saude/
     </table>
     <p>O 3 fica reservado para a busca, como no eMAG.</p>
 
-    <h3>Calendário</h3>
+    <h2>Calendário</h2>
+    <p>
+      Segue o padrão de calendário do W3C (APG), com uma mudança: cada dia é um botão dentro da célula, e não
+      a própria célula. Assim o VoiceOver e o Controle Assistivo do iPhone acionam o dia com segurança.
+    </p>
     <table>
       <caption>Teclas do calendário</caption>
       <thead>
@@ -88,12 +105,14 @@ const ENDERECO_CHAMADOS = 'https://github.com/tecnologia-assistiva/agenda-saude/
 
     <h2>Limitações conhecidas</h2>
     <ul>
+      <li>Os dados ficam só neste navegador. Limpar os dados do navegador apaga as consultas.</li>
+      <li>Não há tradução para Libras.</li>
+      <li>A ajuda do rodapé é só por telefone (fictício).</li>
+      <li>Os atalhos com número podem coincidir com atalhos do navegador ou do leitor de tela.</li>
       <li>
-        No calendário, cada dia é um botão dentro da grade, e não a própria célula como no exemplo do W3C
-        (APG). Assim o VoiceOver e o Controle Assistivo do iPhone acionam o dia com segurança.
+        Em tela de 320 px com texto em 200% e mais espaço entre letras, palavras longas, como “Configurações”,
+        podem quebrar no meio.
       </li>
-      <li>Os atalhos com número podem coincidir com atalhos do navegador.</li>
-      <li>Os dados ficam só neste navegador.</li>
     </ul>
 
     <h2>Como relatar um problema</h2>
