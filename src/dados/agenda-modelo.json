@@ -1,0 +1,37 @@
+{
+  "janelaDias": 30,
+  "taxaOcupacao": 0.5,
+  "turnos": {
+    "manha": ["08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30"],
+    "tarde": ["13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30"]
+  },
+  "grade": {
+    "helena-duarte": { "1": ["manha"], "2": ["manha", "tarde"], "3": ["manha"], "4": ["tarde"], "5": ["manha"] },
+    "marcos-ribeiro": { "1": ["tarde"], "3": ["tarde"], "4": ["manha"], "5": ["tarde"] },
+    "lucia-fernandes": { "1": ["manha"], "3": ["manha"], "5": ["manha"] },
+    "paulo-nogueira": { "2": ["tarde"], "4": ["tarde"] },
+    "beatriz-campos": { "2": ["manha"], "4": ["manha"] },
+    "rafael-teixeira": { "1": ["manha", "tarde"], "3": ["manha", "tarde"] },
+    "camila-rocha": { "2": ["manha"], "4": ["manha"], "5": ["tarde"] },
+    "joana-martins": { "1": ["manha"], "2": ["manha"], "3": ["manha"], "4": ["manha"], "5": ["manha"] },
+    "tiago-alves": { "1": ["tarde"], "2": ["tarde"], "3": ["tarde"], "4": ["tarde"], "5": ["tarde"] }
+  },
+  "diasLotados": [2, 7],
+  "feriados": [
+    "2026-11-20",
+    "2026-12-25",
+    "2027-01-01",
+    "2027-02-08",
+    "2027-02-09",
+    "2027-03-26",
+    "2027-04-21",
+    "2027-05-01",
+    "2027-05-27",
+    "2027-09-07",
+    "2027-10-12",
+    "2027-11-02",
+    "2027-11-15",
+    "2027-11-20",
+    "2027-12-25"
+  ]
+}

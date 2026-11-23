@@ -31,12 +31,26 @@ watch(
   },
 )
 
+/**
+ * O alvo pode ser o próprio campo, um grupo (fieldset: foca a opção marcada ou a primeira) ou uma
+ * grade (calendário: foca o dia com tabindex="0"). Rola até o rótulo, a legenda ou o título da grade.
+ */
 function irParaCampo(id: string) {
   const alvo = document.getElementById(id)
   if (!alvo) return
-  const ehGrupo = alvo.tagName === 'FIELDSET'
-  const campo = ehGrupo ? alvo.querySelector<HTMLElement>('input:checked, input') : alvo
-  const referencia = ehGrupo ? alvo.querySelector('legend') : document.querySelector(`label[for="${id}"]`)
+  const ehControle = alvo.matches('input, select, textarea, button')
+  const campo = ehControle
+    ? alvo
+    : (alvo.querySelector<HTMLElement>('input:checked') ??
+      alvo.querySelector<HTMLElement>('[tabindex="0"]') ??
+      alvo.querySelector<HTMLElement>('input, button'))
+  const idDoTitulo = alvo.getAttribute('aria-labelledby')
+  const referencia =
+    alvo.tagName === 'FIELDSET'
+      ? alvo.querySelector('legend')
+      : idDoTitulo
+        ? document.getElementById(idDoTitulo)
+        : document.querySelector(`label[for="${id}"]`)
   campo?.focus({ preventScroll: true })
   ;(referencia ?? campo)?.scrollIntoView?.({ block: 'start' })
 }

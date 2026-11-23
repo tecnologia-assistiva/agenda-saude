@@ -72,7 +72,7 @@ function continuar() {
       id="telefone"
       v-model="dados.telefone"
       rotulo="Telefone"
-      instrucao="Com DDD. Por exemplo: (11) 98765-4321."
+      instrucao="Celular ou fixo, com DDD. Por exemplo: (11) 98765-4321."
       tipo="tel"
       autocomplete="tel"
       largura="media"

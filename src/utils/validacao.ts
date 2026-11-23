@@ -21,6 +21,11 @@ export type ErrosDe<T> = Partial<Record<keyof T, string>>
 
 export const IDADE_MAXIMA = 130
 
+const MESES = [
+  'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+  'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro',
+]
+
 export function validarNome(valor: string): string | null {
   const nome = formatarNome(valor)
   if (!nome) return 'Digite seu nome completo.'
@@ -35,22 +40,33 @@ export function validarDataNascimento(valor: string, hoje: Date = new Date()): s
   const data = interpretarData(valor)
   if (!data) return 'Digite a data com dia, mês e ano, por exemplo 15/03/1980.'
   if (data.mes < 1 || data.mes > 12) return 'O mês vai de 1 a 12. Confira a data.'
-  if (!dataExiste(data)) return 'Essa data não existe. Confira o dia e o mês.'
+  if (!dataExiste(data)) {
+    const diasNoMes = new Date(data.ano, data.mes, 0).getDate()
+    return `${MESES[data.mes - 1]} de ${data.ano} tem ${diasNoMes} dias. Confira o dia.`
+  }
   const nascimento = new Date(data.ano, data.mes - 1, data.dia)
   const inicioDeHoje = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate())
-  if (nascimento > inicioDeHoje) return 'A data de nascimento não pode ser no futuro.'
+  if (nascimento > inicioDeHoje) return 'A data de nascimento não pode ser depois de hoje. Confira o dia, o mês e o ano.'
   if (hoje.getFullYear() - data.ano > IDADE_MAXIMA) return 'Confira o ano de nascimento.'
   return null
 }
 
+/**
+ * Celular: DDD + 9 números começando com 9. Fixo: DDD + 8 números começando com 2, 3, 4 ou 5.
+ */
 export function validarTelefone(valor: string): string | null {
-  if (!valor.trim()) return 'Digite um telefone com DDD.'
+  if (!valor.trim()) return 'Digite um telefone com DDD. Pode ser celular ou fixo.'
   const digitos = normalizarTelefone(valor)
   if (digitos.length < 10 || digitos.length > 11) {
-    return 'Digite o telefone com DDD, por exemplo (11) 98765-4321.'
+    return 'Digite o DDD e o número, por exemplo (11) 98765-4321 ou (11) 3456-7890.'
   }
   if (Number(digitos.slice(0, 2)) < 11) return 'Confira o DDD. Ele tem 2 números, de 11 a 99.'
-  if (digitos.length === 11 && digitos[2] !== '9') return 'Celular com 11 números começa com 9 depois do DDD.'
+  const numero = digitos.slice(2)
+  const celularValido = numero.length === 9 && numero.startsWith('9')
+  const fixoValido = numero.length === 8 && /^[2-5]/.test(numero)
+  if (!celularValido && !fixoValido) {
+    return 'Confira o número: celular tem 9 números e começa com 9; fixo tem 8 e começa com 2, 3, 4 ou 5.'
+  }
   return null
 }
 

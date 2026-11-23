@@ -61,7 +61,7 @@ describe('etapa 1: seus dados', () => {
     expect(links.map((a) => a.textContent)).toEqual([
       'Digite seu nome completo.',
       'Digite sua data de nascimento.',
-      'Digite um telefone com DDD.',
+      'Digite um telefone com DDD. Pode ser celular ou fixo.',
     ])
     expect(document.title).toBe('Erro: Etapa 1 de 5: Seus dados – Agenda Saúde')
   })
@@ -94,6 +94,31 @@ describe('etapa 1: seus dados', () => {
     await enviar()
     expect(document.activeElement?.classList.contains('resumo-erros')).toBe(true)
     expect(document.querySelector('.resumo-erros h2')?.textContent).toBe('Corrija 2 problemas para continuar')
+  })
+
+  it('instrução do telefone diz que vale celular ou fixo', async () => {
+    await montarApp('/agendar/seus-dados')
+    expect(document.getElementById('telefone-instrucao')?.textContent).toBe(
+      'Celular ou fixo, com DDD. Por exemplo: (11) 98765-4321.',
+    )
+  })
+
+  it('data impossível ou futura: mensagem diz como corrigir; nome com acento, hífen e apóstrofo passa', async () => {
+    await montarApp('/agendar/seus-dados')
+    await digitar('nome', "Ana-Lúcia D'Ávila")
+    await digitar('data-nascimento', '31/02/1990')
+    await digitar('telefone', '(11) 3456-7890')
+    await enviar()
+    expect([...document.querySelectorAll('.resumo-erros a')].map((a) => a.textContent)).toEqual([
+      'Fevereiro de 1990 tem 28 dias. Confira o dia.',
+    ])
+    await digitar('data-nascimento', '01/01/2999')
+    await enviar()
+    expect(document.getElementById('data-nascimento-erro')?.textContent).toBe(
+      'Erro: A data de nascimento não pode ser depois de hoje. Confira o dia, o mês e o ano.',
+    )
+    expect(campo('nome').getAttribute('aria-invalid')).toBeNull()
+    expect(campo('telefone').getAttribute('aria-invalid')).toBeNull()
   })
 
   it('dados colados em outros formatos são formatados e a etapa segue para a 2', async () => {
