@@ -1,5 +1,6 @@
-import type { LocationQuery, Router } from 'vue-router'
+import type { LocationQuery, RouteLocationRaw, Router } from 'vue-router'
 import { useAgendamentoStore } from '@/stores/agendamento'
+import { useConsultasStore } from '@/stores/consultas'
 
 /* As 5 etapas do agendamento: uma rota cada, na ordem. */
 
@@ -38,10 +39,18 @@ export function tituloDaEtapa(numero: number): string {
   return `${legendaDaEtapa(numero)}: ${etapa(numero).nome}`
 }
 
-/** Para onde ir ao enviar a etapa: a seguinte, ou de volta à revisão quando veio de lá ("Alterar"). */
-export function destinoAoContinuar(numero: number, query: LocationQuery): string {
-  if (query.retorno === 'revisao') return etapa(4).caminho
-  return etapa(numero + 1).caminho
+/** Valor de ?retorno= nos links "Alterar" da revisão. */
+export const RETORNO_REVISAO = 'revisao'
+
+/**
+ * Para onde ir ao enviar a etapa: a seguinte, ou de volta à revisão quando veio de lá ("Alterar").
+ * Se a mudança apagou algo de uma etapa seguinte (trocar a especialidade apaga o horário), passa
+ * antes por ela, ainda com ?retorno=revisao.
+ */
+export function destinoAoContinuar(numero: number, query: LocationQuery): RouteLocationRaw {
+  if (query.retorno !== RETORNO_REVISAO) return etapa(numero + 1).caminho
+  const falta = useAgendamentoStore().primeiraEtapaIncompleta
+  return falta < 4 ? { path: etapa(falta).caminho, query: { retorno: RETORNO_REVISAO } } : etapa(4).caminho
 }
 
 export function caminhoDaPrimeiraEtapaIncompleta(): string {
@@ -51,11 +60,13 @@ export function caminhoDaPrimeiraEtapaIncompleta(): string {
 /**
  * Não deixa abrir uma etapa antes de completar as anteriores (pelo endereço, pelo histórico ou por
  * um link antigo). Leva à primeira etapa incompleta, que mostra um aviso.
+ * A confirmação (etapa 5) abre quando há uma consulta acabada de confirmar.
  */
 export function instalarGuardasDoAgendamento(router: Router): void {
   router.beforeEach((para) => {
     const numero = para.meta.etapa
     if (!numero) return true
+    if (numero === TOTAL_ETAPAS && useConsultasStore().confirmacaoAtual) return true
     const liberada = useAgendamentoStore().primeiraEtapaIncompleta
     if (numero <= liberada) return true
     return { path: etapa(liberada).caminho, query: { aviso: AVISO_ETAPA_INCOMPLETA } }

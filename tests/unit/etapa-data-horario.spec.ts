@@ -2,6 +2,7 @@ import { flushPromises } from '@vue/test-utils'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { horariosParaEscolha } from '@/servicos/horarios'
 import { montarApp } from './ajuda/montar-app'
+import { consulta, salvarConsultas } from './ajuda/consultas'
 import { DADOS_VALIDOS, lerRascunhoSalvo, salvarRascunho } from './ajuda/rascunho'
 
 /* Data fixa: quarta-feira, 18/11/2026, 10h (o relógio continua andando a partir daí). */
@@ -102,16 +103,54 @@ describe('etapa 3: data e horário', () => {
     )
   })
 
-  it('trocar de dia apaga o horário do dia anterior', async () => {
+  it('trocar de dia apaga o horário do dia anterior: avisa antes (texto) e depois (texto + status)', async () => {
+    const { wrapper } = await abrirEtapa3()
+    await marcar('modo', 'calendario')
+    const aviso = () => document.querySelector('main form .calendario')?.previousElementSibling
+    document.querySelector<HTMLButtonElement>('[data-data="2026-11-19"]')?.click()
+    await flushPromises()
+    expect(aviso()?.tagName).not.toBe('P')
+    await marcar('horario', (opcoes('horario')[0] as HTMLInputElement).value)
+    expect(lerRascunhoSalvo()?.horario?.data).toBe('2026-11-19')
+    expect(aviso()?.textContent).toBe('Se escolher outro dia, o horário escolhido será apagado.')
+
+    document.querySelector<HTMLButtonElement>('[data-data="2026-11-24"]')?.click()
+    await flushPromises()
+    expect(lerRascunhoSalvo()?.horario).toBeNull()
+    expect(aviso()?.className).toBe('texto-atencao')
+    expect(aviso()?.textContent).toBe('O horário escolhido antes foi apagado. Escolha um horário do novo dia.')
+    const quantidade = horariosParaEscolha('2026-11-18', 'clinica-geral', 'qualquer').filter((h) => h.data === '2026-11-24').length
+    await expect.poll(() => wrapper.get('[data-testid="regiao-status"]').text()).toBe(
+      `terça-feira, 24 de novembro escolhido. O horário escolhido antes foi apagado. ${quantidade} horários livres logo abaixo do calendário.`,
+    )
+  })
+
+  it('voltar ao mesmo dia não apaga nada nem avisa', async () => {
     await abrirEtapa3()
     await marcar('modo', 'calendario')
     document.querySelector<HTMLButtonElement>('[data-data="2026-11-19"]')?.click()
     await flushPromises()
     await marcar('horario', (opcoes('horario')[0] as HTMLInputElement).value)
-    expect(lerRascunhoSalvo()?.horario?.data).toBe('2026-11-19')
-    document.querySelector<HTMLButtonElement>('[data-data="2026-11-24"]')?.click()
+    document.querySelector<HTMLButtonElement>('[data-data="2026-11-19"]')?.click()
     await flushPromises()
-    expect(lerRascunhoSalvo()?.horario).toBeNull()
+    expect(lerRascunhoSalvo()?.horario?.data).toBe('2026-11-19')
+    expect(document.querySelector('main form .texto-atencao')).toBeNull()
+  })
+
+  it('horário escolhido na lista: ao mudar para o calendário, o dia e o horário aparecem marcados', async () => {
+    await abrirEtapa3()
+    const primeiro = opcoes('horario')[0] as HTMLInputElement
+    await marcar('horario', primeiro.value)
+    await marcar('modo', 'calendario')
+    expect(document.querySelector('[data-data="2026-11-19"]')?.closest('td')?.getAttribute('aria-selected')).toBe('true')
+    expect(opcoes('horario').find((r) => r.checked)?.value).toBe(primeiro.value)
+  })
+
+  it('horário já marcado em "Minhas consultas" não aparece livre', async () => {
+    const [primeiro, segundo] = horariosParaEscolha('2026-11-18', 'clinica-geral', 'helena-duarte')
+    salvarConsultas([consulta({ horario: primeiro! })])
+    await abrirEtapa3({ profissionalId: 'helena-duarte' })
+    expect(opcoes('horario')[0]?.value).toBe(`${segundo?.data}|${segundo?.hora}|${segundo?.profissionalId}`)
   })
 
   it('dia escolhido sem horário marcado: o erro vai para a lista de horários do dia', async () => {

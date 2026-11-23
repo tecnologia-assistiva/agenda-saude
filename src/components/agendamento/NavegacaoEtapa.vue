@@ -2,22 +2,22 @@
 /*
  * Ações no fim de cada etapa: o botão principal (envia o formulário) e "Voltar" como link,
  * porque só navega. Quem veio da revisão por "Alterar" (?retorno=revisao) volta para ela.
+ * `textoBotao` troca o "Continuar" (na revisão: "Confirmar agendamento").
  */
 import { computed } from 'vue'
 import { useRoute, type RouteLocationRaw } from 'vue-router'
-import { etapa } from '@/router/etapas'
+import { RETORNO_REVISAO, etapa } from '@/router/etapas'
 
-const props = defineProps<{ voltarPara: RouteLocationRaw }>()
+const props = defineProps<{ voltarPara: RouteLocationRaw; textoBotao?: string }>()
 const route = useRoute()
 
-const vindoDaRevisao = computed(() => route.query.retorno === 'revisao')
+const vindoDaRevisao = computed(() => route.query.retorno === RETORNO_REVISAO)
+const texto = computed(() => (vindoDaRevisao.value ? 'Salvar e voltar para a revisão' : (props.textoBotao ?? 'Continuar')))
 </script>
 
 <template>
   <div class="navegacao-etapa">
-    <button type="submit" class="botao">
-      {{ vindoDaRevisao ? 'Salvar e voltar para a revisão' : 'Continuar' }}
-    </button>
+    <button type="submit" class="botao">{{ texto }}</button>
     <RouterLink :to="vindoDaRevisao ? etapa(4).caminho : props.voltarPara" class="navegacao-etapa__voltar">
       Voltar
     </RouterLink>

@@ -5,10 +5,11 @@
  * - "Dias lotados": o 2º e o 7º dia útil depois de hoje não têm nenhuma vaga.
  * - Ocupação parcial por sorteio com semente fixa: cada horário tem sempre o mesmo resultado,
  *   então a agenda é a mesma em todo acesso e nos testes (que fixam a data de hoje).
+ * - `ocupados`: horários já marcados em "Minhas consultas" (chaveDoHorario), que não aparecem livres.
  */
 import modelo from '@/dados/agenda-modelo.json'
 import { QUALQUER_PROFISSIONAL, buscarProfissional, profissionaisDaEspecialidade } from './catalogo'
-import { adicionarDias, diaDaSemana, ehFimDeSemana } from '@/utils/datas'
+import { adicionarDias, diaDaSemana, ehFimDeSemana, formatarDataLonga } from '@/utils/datas'
 
 export interface Horario {
   /** AAAA-MM-DD */
@@ -29,6 +30,10 @@ interface ModeloAgenda {
 
 const agenda: ModeloAgenda = modelo
 const feriados = new Set(agenda.feriados)
+const NENHUM_OCUPADO: ReadonlySet<string> = new Set()
+
+/** Duração de cada consulta, em minutos (os turnos andam de 30 em 30). */
+export const DURACAO_CONSULTA_MIN = 30
 
 /** Número entre 0 e 1 sempre igual para o mesmo texto (FNV-1a de 32 bits). */
 function sorteioFixo(texto: string): number {
@@ -72,7 +77,11 @@ function horasDoProfissional(profissionalId: string, data: string): string[] {
 }
 
 /** Todos os horários livres dos profissionais, na janela, em ordem de data, hora e profissional. */
-export function gerarHorariosLivres(hoje: string, profissionalIds: string[]): Horario[] {
+export function gerarHorariosLivres(
+  hoje: string,
+  profissionalIds: string[],
+  ocupados: ReadonlySet<string> = NENHUM_OCUPADO,
+): Horario[] {
   const { inicio, fim } = janelaDeAgendamento(hoje)
   const lotados = diasLotados(hoje)
   const livres: Horario[] = []
@@ -82,7 +91,7 @@ export function gerarHorariosLivres(hoje: string, profissionalIds: string[]): Ho
     for (const profissionalId of profissionalIds) {
       for (const hora of horasDoProfissional(profissionalId, data)) {
         const horario = { data, hora, profissionalId }
-        if (!estaOcupado(horario)) doDia.push(horario)
+        if (!estaOcupado(horario) && !ocupados.has(chaveDoHorario(horario))) doDia.push(horario)
       }
     }
     doDia.sort((a, b) => a.hora.localeCompare(b.hora))
@@ -105,8 +114,9 @@ export function horariosParaEscolha(
   hoje: string,
   especialidadeId: string | null,
   profissionalId: string | null,
+  ocupados: ReadonlySet<string> = NENHUM_OCUPADO,
 ): Horario[] {
-  const livres = gerarHorariosLivres(hoje, profissionaisDaEscolha(especialidadeId, profissionalId))
+  const livres = gerarHorariosLivres(hoje, profissionaisDaEscolha(especialidadeId, profissionalId), ocupados)
   if (profissionalId !== QUALQUER_PROFISSIONAL) return livres
   const vistos = new Set<string>()
   return livres.filter((h) => {
@@ -123,8 +133,10 @@ export function horarioAindaValido(
   hoje: string,
   especialidadeId: string | null,
   profissionalId: string | null,
+  ocupados: ReadonlySet<string> = NENHUM_OCUPADO,
 ): boolean {
   const { inicio, fim } = janelaDeAgendamento(hoje)
+  if (ocupados.has(chaveDoHorario(horario))) return false
   if (horario.data < inicio || horario.data > fim) return false
   if (!ehDiaUtil(horario.data) || diasLotados(hoje).has(horario.data)) return false
   if (!profissionaisDaEscolha(especialidadeId, profissionalId).includes(horario.profissionalId)) return false
@@ -144,4 +156,19 @@ export function chaveDoHorario(h: Horario): string {
 export function horarioDaChave(chave: string): Horario | null {
   const [data, hora, profissionalId] = chave.split('|')
   return data && hora && profissionalId ? { data, hora, profissionalId } : null
+}
+
+/** Lê um horário salvo (localStorage); null se não tiver o formato certo. */
+export function horarioDe(valor: unknown): Horario | null {
+  if (typeof valor !== 'object' || valor === null) return null
+  const h = valor as Record<string, unknown>
+  if (typeof h.data !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(h.data)) return null
+  if (typeof h.hora !== 'string' || !/^\d{2}:\d{2}$/.test(h.hora)) return null
+  if (typeof h.profissionalId !== 'string') return null
+  return { data: h.data, hora: h.hora, profissionalId: h.profissionalId }
+}
+
+/** "quinta-feira, 19 de novembro, às 09:00" */
+export function descreverHorario(h: Horario): string {
+  return `${formatarDataLonga(h.data)}, às ${h.hora}`
 }

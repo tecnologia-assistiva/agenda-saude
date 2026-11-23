@@ -77,3 +77,22 @@
   --cor-erro: #ffffff;
   --cor-sucesso: #ffff00;
 }
+
+/*
+ * Impressão: texto escuro no papel branco em qualquer tema (amarelo do alto contraste sumiria no
+ * papel). ":root:root" fica depois dos temas e com o mesmo peso, então vence; não é um tema novo.
+ */
+@media print {
+  :root:root {
+    color-scheme: light;
+    --cor-fundo: #ffffff;
+    --cor-superficie: #ffffff;
+    --cor-texto: #1b1b1b;
+    --cor-texto-suave: #50575e;
+    --cor-link: #1d4370;
+    --cor-borda: #5f666d;
+    --cor-separador: #b1b4b6;
+    --cor-erro: #b3261e;
+    --cor-sucesso: #1d6b38;
+  }
+}

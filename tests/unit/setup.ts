@@ -1,12 +1,14 @@
 import { enableAutoUnmount } from '@vue/test-utils'
 import { afterEach, beforeEach } from 'vitest'
 import { limparAnuncios } from '@/composables/useAnunciador'
+import { simularDialogo } from './ajuda/simular-dialogo'
 import { simularMidia } from './ajuda/simular-midia'
 
 enableAutoUnmount(afterEach)
 
 // O jsdom não implementa a rolagem; o scrollBehavior do router chama window.scrollTo.
 window.scrollTo = () => {}
+simularDialogo()
 
 beforeEach(() => {
   window.localStorage.clear()

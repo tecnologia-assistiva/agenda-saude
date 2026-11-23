@@ -3,7 +3,9 @@
  * Etapa 3: data e horário. Começa perguntando como a pessoa prefere escolher:
  * - "Ver próximos horários disponíveis" (padrão, o caminho mais simples): lista dos 10 próximos;
  * - "Escolher no calendário": calendário (padrão APG) + horários do dia escolhido.
- * O horário escolhido fica no rascunho; trocar de dia no calendário apaga o horário do outro dia.
+ * O horário escolhido fica no rascunho. Trocar de dia no calendário apaga o horário do outro dia:
+ * a tela avisa antes (texto fixo) e depois (texto na tela + anúncio na região de status), como na
+ * etapa 2. Horários já marcados em "Minhas consultas" não aparecem.
  */
 import { computed, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -26,22 +28,28 @@ import TituloPagina from '@/components/comum/TituloPagina.vue'
 import GrupoOpcoes, { type Opcao } from '@/components/formulario/GrupoOpcoes.vue'
 import ResumoErros from '@/components/formulario/ResumoErros.vue'
 import AvisoEtapaIncompleta from '@/components/agendamento/AvisoEtapaIncompleta.vue'
+import AvisoRemarcacao from '@/components/agendamento/AvisoRemarcacao.vue'
 import CalendarioDatas from '@/components/agendamento/CalendarioDatas.vue'
 import NavegacaoEtapa from '@/components/agendamento/NavegacaoEtapa.vue'
 
 type Modo = 'proximos' | 'calendario'
 
 const QUANTIDADE_PROXIMOS = 10
+const HORARIO_APAGADO = 'O horário escolhido antes foi apagado.'
+const MENSAGEM_HORARIO_APAGADO = `${HORARIO_APAGADO} Escolha um horário do novo dia.`
 
 const route = useRoute()
 const router = useRouter()
 const { anunciar } = useAnunciador()
-const rascunho = useAgendamentoStore().rascunho
+const agendamento = useAgendamentoStore()
+const rascunho = agendamento.rascunho
 
 const hoje = hojeISO()
 const { fim } = janelaDeAgendamento(hoje)
 
-const horarios = computed(() => horariosParaEscolha(hoje, rascunho.especialidadeId, rascunho.profissionalId))
+const horarios = computed(() =>
+  horariosParaEscolha(hoje, rascunho.especialidadeId, rascunho.profissionalId, agendamento.horariosOcupados),
+)
 const livresPorDia = computed(() => contarPorDia(horarios.value))
 const proximos = computed(() => horarios.value.slice(0, QUANTIDADE_PROXIMOS))
 const comQualquerProfissional = computed(() => rascunho.profissionalId === QUALQUER_PROFISSIONAL)
@@ -50,7 +58,7 @@ const comQualquerProfissional = computed(() => rascunho.profissionalId === QUALQ
 const horarioVencido = ref(false)
 if (
   rascunho.horario &&
-  !horarioAindaValido(rascunho.horario, hoje, rascunho.especialidadeId, rascunho.profissionalId)
+  !horarioAindaValido(rascunho.horario, hoje, rascunho.especialidadeId, rascunho.profissionalId, agendamento.horariosOcupados)
 ) {
   rascunho.horario = null
   horarioVencido.value = true
@@ -65,6 +73,8 @@ const horarioGuardado = rascunho.horario
 const estaNosProximos = (h: Horario) => proximos.value.some((p) => chaveDoHorario(p) === chaveDoHorario(h))
 const modo = ref<Modo>(horarioGuardado && !estaNosProximos(horarioGuardado) ? 'calendario' : 'proximos')
 const diaEscolhido = ref<string | null>(horarioGuardado?.data ?? null)
+const horarioApagado = ref(false)
+const temHorario = computed(() => rascunho.horario !== null)
 
 const chaveSelecionada = computed<string | null>({
   get: () => (rascunho.horario ? chaveDoHorario(rascunho.horario) : null),
@@ -77,11 +87,16 @@ const diaDoCalendario = computed<string | null>({
   get: () => diaEscolhido.value,
   set: (data) => {
     if (!data) return
-    if (rascunho.horario && rascunho.horario.data !== data) rascunho.horario = null
+    const apagou = rascunho.horario !== null && rascunho.horario.data !== data
+    if (apagou) {
+      rascunho.horario = null
+      horarioApagado.value = true
+    }
     diaEscolhido.value = data
     const quantidade = livresPorDia.value.get(data) ?? 0
     const texto = quantidade === 1 ? '1 horário livre' : `${quantidade} horários livres`
-    anunciar(`${formatarDataLonga(data)} escolhido. ${texto} logo abaixo do calendário.`)
+    const partes = [`${formatarDataLonga(data)} escolhido.`, apagou ? HORARIO_APAGADO : null, `${texto} logo abaixo do calendário.`]
+    anunciar(partes.filter(Boolean).join(' '))
   },
 })
 
@@ -113,9 +128,11 @@ const { erros, listaErros, tentativa, validarAoEnviar } = useFormulario({
   titulo: () => route.meta.titulo,
 })
 
-// Os erros de um modo não valem para o outro.
-watch(modo, () => {
+watch(modo, (novo) => {
+  // Os erros de um modo não valem para o outro.
   erros.value = {}
+  // O horário escolhido na lista aparece marcado no calendário (dia e horário).
+  if (novo === 'calendario' && rascunho.horario) diaEscolhido.value = rascunho.horario.data
 })
 
 function continuar() {
@@ -126,6 +143,7 @@ function continuar() {
 <template>
   <TituloPagina :legenda="legendaDaEtapa(3)">Data e horário</TituloPagina>
   <AvisoEtapaIncompleta />
+  <AvisoRemarcacao />
   <form novalidate @submit.prevent="continuar">
     <ResumoErros :erros="listaErros" :tentativa="tentativa" />
     <p v-if="horarioVencido" class="texto-atencao">O horário escolhido antes não está mais livre. Escolha outro.</p>
@@ -144,6 +162,9 @@ function continuar() {
     />
 
     <template v-else>
+      <!-- Antes e depois no mesmo lugar: a troca de um texto pelo outro quase não mexe na página. -->
+      <p v-if="horarioApagado" class="texto-atencao">{{ MENSAGEM_HORARIO_APAGADO }}</p>
+      <p v-else-if="temHorario">Se escolher outro dia, o horário escolhido será apagado.</p>
       <CalendarioDatas
         id="calendario"
         v-model="diaDoCalendario"

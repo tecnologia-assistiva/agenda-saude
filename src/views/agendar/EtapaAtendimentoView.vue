@@ -21,6 +21,7 @@ import TituloPagina from '@/components/comum/TituloPagina.vue'
 import GrupoOpcoes, { type Opcao } from '@/components/formulario/GrupoOpcoes.vue'
 import ResumoErros from '@/components/formulario/ResumoErros.vue'
 import AvisoEtapaIncompleta from '@/components/agendamento/AvisoEtapaIncompleta.vue'
+import AvisoRemarcacao from '@/components/agendamento/AvisoRemarcacao.vue'
 import NavegacaoEtapa from '@/components/agendamento/NavegacaoEtapa.vue'
 
 const MENSAGEM_HORARIO_APAGADO = 'O horário escolhido foi apagado. Escolha outro na próxima etapa.'
@@ -87,6 +88,7 @@ function continuar() {
 <template>
   <TituloPagina :legenda="legendaDaEtapa(2)">Tipo de atendimento</TituloPagina>
   <AvisoEtapaIncompleta />
+  <AvisoRemarcacao />
   <form novalidate @submit.prevent="continuar">
     <ResumoErros :erros="listaErros" :tentativa="tentativa" />
     <p v-if="horarioApagado" class="texto-atencao">{{ MENSAGEM_HORARIO_APAGADO }}</p>

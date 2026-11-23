@@ -19,6 +19,13 @@ export interface DadosPessoais {
 
 export type ErrosDe<T> = Partial<Record<keyof T, string>>
 
+/** Lê dados pessoais salvos (localStorage), trocando por vazio o que não for texto. */
+export function dadosPessoaisDe(valor: unknown): DadosPessoais {
+  const d = (typeof valor === 'object' && valor !== null ? valor : {}) as Record<string, unknown>
+  const texto = (v: unknown) => (typeof v === 'string' ? v : '')
+  return { nome: texto(d.nome), dataNascimento: texto(d.dataNascimento), telefone: texto(d.telefone), cartaoSus: texto(d.cartaoSus) }
+}
+
 export const IDADE_MAXIMA = 130
 
 const MESES = [
