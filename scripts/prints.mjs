@@ -1,14 +1,30 @@
 /*
  * Capturas das telas principais nos 3 temas, para o README e o vídeo. É um script, não um teste.
- * Uso: `npm run prints` (gera o build e salva os PNG em docs/prints/, substituindo os anteriores).
- * - Computador (1280 px de largura, página inteira) nos 3 temas; celular (390 px) no tema claro.
+ * Uso: `npm run prints` (gera o build e as capturas, substituindo as anteriores).
+ * - docs/prints/todas/ (fora do Git): PNG de tudo. Computador (1280 px, página inteira) nos 3 temas e
+ *   celular (390 px) no tema claro.
+ * - docs/prints/ (no Git): só as do README, em WebP (qualidade 0,92, uns 40% menor que o PNG), codificadas
+ *   pelo próprio Chromium, sem dependência a mais.
  * - Mesma data fixa dos testes (18/11/2026): as capturas não mudam de um dia para o outro.
  */
-import { mkdir } from 'node:fs/promises'
+import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { chromium } from '@playwright/test'
 import { preview } from 'vite'
 
-const PASTA = 'docs/prints'
+const PASTA_README = 'docs/prints'
+const PASTA = `${PASTA_README}/todas`
+/** As que vão para o README (nome da captura em todas/, sem extensão). */
+const PARA_O_README = [
+  '01-inicio-claro',
+  '03-erros-claro',
+  '05-calendario-claro',
+  '06-revisao-escuro',
+  '07-confirmacao-claro',
+  '09-cancelar-consulta-claro',
+  '08-minhas-consultas-alto-contraste',
+  '05-calendario-claro-celular',
+]
+const QUALIDADE_WEBP = 0.92
 const HOJE = new Date('2026-11-18T10:00:00-03:00')
 const TEMAS = ['claro', 'escuro', 'alto-contraste']
 const TAMANHOS = [
@@ -107,6 +123,26 @@ async function capturar(navegador, endereco, tela, tema, tamanho) {
   return arquivo
 }
 
+/** PNG → WebP pelo canvas do Chromium. */
+async function paraWebp(navegador, png) {
+  const page = await navegador.newPage()
+  const endereco = await page.evaluate(
+    async ([dados, qualidade]) => {
+      const imagem = new Image()
+      imagem.src = `data:image/png;base64,${dados}`
+      await imagem.decode()
+      const tela = document.createElement('canvas')
+      tela.width = imagem.naturalWidth
+      tela.height = imagem.naturalHeight
+      tela.getContext('2d').drawImage(imagem, 0, 0)
+      return tela.toDataURL('image/webp', qualidade)
+    },
+    [png.toString('base64'), QUALIDADE_WEBP],
+  )
+  await page.close()
+  return Buffer.from(endereco.split(',')[1], 'base64')
+}
+
 await mkdir(PASTA, { recursive: true })
 const servidor = await preview({ preview: { port: 4174, strictPort: true }, logLevel: 'warn' })
 const navegador = await chromium.launch()
@@ -122,6 +158,11 @@ try {
     }
   }
   console.log(`${total} capturas em ${PASTA}/`)
+  for (const nome of PARA_O_README) {
+    const webp = await paraWebp(navegador, await readFile(`${PASTA}/${nome}.png`))
+    await writeFile(`${PASTA_README}/${nome}.webp`, webp)
+  }
+  console.log(`${PARA_O_README.length} para o README em ${PASTA_README}/ (WebP)`)
 } finally {
   await navegador.close()
   await servidor.close()

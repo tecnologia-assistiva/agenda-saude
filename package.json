@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "description": "Agendamento de consultas numa UBS fictícia, feito para ser acessível (WCAG 2.2 AA, eMAG, NBR 17060).",
+  "license": "MIT",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --build && vite build",

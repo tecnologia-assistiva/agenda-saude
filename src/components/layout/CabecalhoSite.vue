@@ -76,12 +76,18 @@ import MenuPrincipal from './MenuPrincipal.vue'
   font-size: 1.125rem;
 }
 
+/*
+ * Recuo lateral: o normal (1rem) quando há espaço; menor só quando a tela é estreita para o tamanho do
+ * texto. 7.5vw - 0.5rem dá 1rem em 320 px com texto 100% e 0.25rem com texto 200%; em 360 px ou mais,
+ * quase sempre volta a 1rem. Assim "Configurações" cabe numa linha em 320 px com texto 200% (fontes como
+ * Arial, Segoe UI e Roboto). Com espaçamento ampliado ou fontes largas, a palavra ainda pode quebrar.
+ */
 .cabecalho__configuracoes {
   display: inline-flex;
   align-items: center;
   max-width: 100%;
   min-height: var(--alvo-minimo);
-  padding: var(--espaco-2) var(--espaco-4);
+  padding: var(--espaco-2) clamp(var(--espaco-1), 7.5vw - 0.5rem, var(--espaco-4));
   border: 0.125rem solid var(--cor-texto-institucional);
   color: var(--cor-texto-institucional);
   font-weight: 700;
