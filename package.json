@@ -11,7 +11,9 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "lint": "eslint .",
-    "typecheck": "vue-tsc --build"
+    "typecheck": "vue-tsc --build",
+    "e2e": "BASE_PATH=/agenda-saude/ vite build && playwright test",
+    "prints": "vite build && node scripts/prints.mjs"
   },
   "engines": {
     "node": ">=22.12.0"
@@ -23,6 +25,8 @@
     "vue-router": "^5.5.1"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.14.0",
+    "@playwright/test": "^1.65.1",
     "@types/node": "^22.20.5",
     "@vitejs/plugin-vue": "^6.0.11",
     "@vue/eslint-config-typescript": "^14.9.0",

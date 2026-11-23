@@ -1,5 +1,5 @@
-# Testes + build + publicação no GitHub Pages.
-# Em pull request: só lint, testes e build. Na main (ou manualmente): publica.
+# Testes + build + e2e + publicação no GitHub Pages.
+# Em pull request: lint, testes, build e e2e. Na main (ou manualmente): o mesmo e, se tudo passar, publica.
 # Requer em Settings → Pages → "Build and deployment" → Source: "GitHub Actions".
 name: Testar e publicar
 
@@ -38,6 +38,26 @@ jobs:
         run: npm run build
         env:
           BASE_PATH: /${{ github.event.repository.name }}/
+
+      # E2E contra esse mesmo build (axe, teclado, largura, foco, impressão e cores forçadas).
+      # Se falhar, o site não é publicado.
+      - name: Instalar o Chromium do Playwright
+        run: npx playwright install --with-deps chromium
+
+      - name: Testes e2e
+        run: npx playwright test
+        env:
+          BASE_PATH: /${{ github.event.repository.name }}/
+
+      - name: Guardar o relatório dos e2e (se falharem)
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: relatorio-playwright
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
 
       - name: Enviar o site para o Pages
         if: github.event_name != 'pull_request'

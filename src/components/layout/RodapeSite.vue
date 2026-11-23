@@ -46,8 +46,9 @@
   min-height: var(--alvo-minimo);
 }
 
+/* inline-block: o número fica inteiro numa linha quando cabe, e quebra só quando não cabe (texto em 200%). */
 .rodape__telefone {
-  white-space: nowrap;
+  display: inline-block;
 }
 
 .rodape__nota {

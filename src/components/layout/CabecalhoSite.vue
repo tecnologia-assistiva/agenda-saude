@@ -4,6 +4,8 @@
  * demonstração. Não é fixo: rola com a página, então nunca cobre o elemento focado (WCAG 2.4.11)
  * e não ocupa a tela com zoom de 400%.
  * "Configurações" é um link com visual de botão, porque leva a outra página.
+ * Quando não cabem lado a lado (tela estreita, texto grande), o nome fica em cima e o link embaixo;
+ * se nem assim couber (320 px com texto em 200%), o texto do link quebra em vez de passar da tela.
  */
 import BarraAcessibilidade from './BarraAcessibilidade.vue'
 import MenuPrincipal from './MenuPrincipal.vue'
@@ -52,6 +54,7 @@ import MenuPrincipal from './MenuPrincipal.vue'
   flex-wrap: wrap;
   align-items: baseline;
   gap: 0 var(--espaco-4);
+  min-width: 0;
   margin: 0;
 }
 
@@ -76,6 +79,7 @@ import MenuPrincipal from './MenuPrincipal.vue'
 .cabecalho__configuracoes {
   display: inline-flex;
   align-items: center;
+  max-width: 100%;
   min-height: var(--alvo-minimo);
   padding: var(--espaco-2) var(--espaco-4);
   border: 0.125rem solid var(--cor-texto-institucional);
