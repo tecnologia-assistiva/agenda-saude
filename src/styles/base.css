@@ -53,7 +53,10 @@ body {
   font-family: var(--fonte-texto);
   font-size: 1rem;
   line-height: var(--altura-linha);
+  /* "anywhere" (e não só "break-word"): uma palavra longa também pode quebrar dentro de itens flex
+     e de botões, então nada passa da largura da tela com texto em 200% e espaçamento ampliado. */
   overflow-wrap: break-word;
+  overflow-wrap: anywhere;
 }
 
 @media (min-width: 40em) {
