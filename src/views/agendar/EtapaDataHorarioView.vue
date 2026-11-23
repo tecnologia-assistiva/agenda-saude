@@ -1,12 +1,4 @@
 <script setup lang="ts">
-/*
- * Etapa 3: data e horário. Começa perguntando como a pessoa prefere escolher:
- * - "Ver próximos horários disponíveis" (padrão, o caminho mais simples): lista dos 10 próximos;
- * - "Escolher no calendário": calendário (padrão APG) + horários do dia escolhido.
- * O horário escolhido fica no rascunho. Trocar de dia no calendário apaga o horário do outro dia:
- * a tela avisa antes (texto fixo) e depois (texto na tela + anúncio na região de status), como na
- * etapa 2. Horários já marcados em "Minhas consultas" não aparecem.
- */
 import { computed, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAnunciador } from '@/composables/useAnunciador'
@@ -54,7 +46,6 @@ const livresPorDia = computed(() => contarPorDia(horarios.value))
 const proximos = computed(() => horarios.value.slice(0, QUANTIDADE_PROXIMOS))
 const comQualquerProfissional = computed(() => rascunho.profissionalId === QUALQUER_PROFISSIONAL)
 
-// Um horário guardado que já não serve (passou ou foi ocupado) é apagado, com aviso.
 const horarioVencido = ref(false)
 if (
   rascunho.horario &&
@@ -129,9 +120,7 @@ const { erros, listaErros, tentativa, validarAoEnviar } = useFormulario({
 })
 
 watch(modo, (novo) => {
-  // Os erros de um modo não valem para o outro.
   erros.value = {}
-  // O horário escolhido na lista aparece marcado no calendário (dia e horário).
   if (novo === 'calendario' && rascunho.horario) diaEscolhido.value = rascunho.horario.data
 })
 
@@ -162,7 +151,6 @@ function continuar() {
     />
 
     <template v-else>
-      <!-- Antes e depois no mesmo lugar: a troca de um texto pelo outro quase não mexe na página. -->
       <p v-if="horarioApagado" class="texto-atencao">{{ MENSAGEM_HORARIO_APAGADO }}</p>
       <p v-else-if="temHorario">Se escolher outro dia, o horário escolhido será apagado.</p>
       <CalendarioDatas

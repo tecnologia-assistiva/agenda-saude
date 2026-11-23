@@ -1,15 +1,7 @@
-/*
- * Formatação dos campos ao sair deles (blur), nunca durante a digitação: assim o leitor de tela
- * não ouve o texto mudando, e colar funciona em qualquer formato.
- * Se não der para interpretar o valor, ele volta como foi digitado (só sem espaços nas pontas);
- * a validação ao enviar explica o que corrigir.
- */
-
 export function somenteDigitos(valor: string): string {
   return valor.replace(/\D/g, '')
 }
 
-/** Tira espaços repetidos e das pontas. */
 export function formatarNome(valor: string): string {
   return valor.replace(/\s+/g, ' ').trim()
 }
@@ -20,11 +12,6 @@ export interface DataSimples {
   ano: number
 }
 
-/**
- * Entende datas como 15/03/1980, 15-3-1980, 15.03.1980, 15 03 1980, 15031980 e 1980-03-15
- * (formato que o preenchimento automático do navegador às vezes usa).
- * Só confere o formato; se a data existe é com `dataExiste`.
- */
 export function interpretarData(valor: string): DataSimples | null {
   const texto = valor.trim()
   const iso = /^(\d{4})-(\d{1,2})-(\d{1,2})$/.exec(texto)
@@ -49,7 +36,6 @@ export function formatarData(valor: string): string {
   return `${doisDigitos(data.dia)}/${doisDigitos(data.mes)}/${data.ano}`
 }
 
-/** Só os dígitos com DDD; tira o +55 (ou 0 de operadora) se vier junto. */
 export function normalizarTelefone(valor: string): string {
   let digitos = somenteDigitos(valor)
   if ((digitos.length === 12 || digitos.length === 13) && digitos.startsWith('55')) digitos = digitos.slice(2)
@@ -64,7 +50,6 @@ export function formatarTelefone(valor: string): string {
   return valor.trim()
 }
 
-/** Cartão SUS: 15 números, mostrados em grupos de 3, 4, 4 e 4. */
 export function formatarCartaoSus(valor: string): string {
   const digitos = somenteDigitos(valor)
   if (digitos.length !== 15) return valor.trim()

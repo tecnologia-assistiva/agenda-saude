@@ -1,9 +1,4 @@
 <script setup lang="ts">
-/*
- * Configurações de acessibilidade. Cada mudança vale na hora (store → atributos no <html>),
- * fica salva no localStorage e, para tema e tamanho do texto, é anunciada na região de status.
- * As caixas de seleção não precisam de anúncio: o leitor já fala "marcado" / "não marcado".
- */
 import { computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAnunciador } from '@/composables/useAnunciador'
@@ -53,7 +48,6 @@ function restaurar() {
   anunciar('Configurações iniciais restauradas.')
 }
 
-// Falha ao salvar é o único caso de alerta aqui: a pessoa perderia as escolhas ao fechar a página.
 watch(
   () => configuracoes.salvamentoFalhou,
   (falhou) => {
@@ -63,7 +57,6 @@ watch(
   },
 )
 
-// O Vue Router guarda no histórico de onde a pessoa veio; serve para o link "Voltar".
 const paginaAnterior = (() => {
   const anterior = useRouter().options.history.state?.back
   return typeof anterior === 'string' && !anterior.startsWith('/configuracoes') ? anterior : null

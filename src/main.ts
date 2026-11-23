@@ -13,7 +13,6 @@ import { useConfiguracoesStore } from './stores/configuracoes'
 const app = createApp(App)
 const pinia = createPinia()
 app.use(pinia)
-// Cria a store já na carga: ela aplica as preferências no <html>.
 useConfiguracoesStore(pinia)
 app.use(criarRouter())
 app.mount('#app')

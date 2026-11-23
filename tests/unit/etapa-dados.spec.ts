@@ -128,7 +128,6 @@ describe('etapa 1: seus dados', () => {
     await digitar('telefone', '+55 11 98765 4321')
     await digitar('cartao-sus', '123.4567.8901.2345')
     await enviar()
-    // A tela da etapa 2 é carregada sob demanda: espera a navegação terminar.
     await expect.poll(() => router.currentRoute.value.path).toBe('/agendar/atendimento')
     await flushPromises()
     expect(lerRascunhoSalvo()?.dados).toEqual({

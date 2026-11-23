@@ -3,51 +3,33 @@ import { resolve } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { hexParaRgb, lerTokensDeCor, razaoContraste } from '@/utils/contraste'
 
-/*
- * Confere o contraste dos tokens de cor de cada tema (WCAG 1.4.3 e 1.4.11).
- * Cada par é [frente, fundo, mínimo]. Ao criar um token novo, inclua os pares em que ele é usado
- * (ou marque-o como decorativo): o teste "todo token..." falha se algum ficar de fora.
- */
 const TEXTO = 4.5
 const NAO_TEXTO = 3
 
 const PARES: [string, string, number][] = [
-  // Texto comum e texto de apoio
   ['cor-texto', 'cor-fundo', TEXTO],
   ['cor-texto', 'cor-superficie', TEXTO],
   ['cor-texto-suave', 'cor-fundo', TEXTO],
   ['cor-texto-suave', 'cor-superficie', TEXTO],
-  // Links (também a barra da página atual no menu)
   ['cor-link', 'cor-fundo', TEXTO],
   ['cor-link', 'cor-superficie', TEXTO],
-  // Faixa institucional do cabeçalho
   ['cor-texto-institucional', 'cor-institucional', TEXTO],
-  // Botão principal
   ['cor-botao-texto', 'cor-botao-fundo', TEXTO],
   ['cor-botao-texto', 'cor-botao-fundo-hover', TEXTO],
   ['cor-botao-borda', 'cor-fundo', NAO_TEXTO],
-  // Texto com foco (fundo amarelo)
   ['cor-foco-texto', 'cor-foco-fundo', TEXTO],
-  // Mensagens
   ['cor-erro', 'cor-fundo', TEXTO],
   ['cor-erro', 'cor-superficie', TEXTO],
   ['cor-sucesso', 'cor-fundo', TEXTO],
-  // Bordas de campos e do botão secundário
   ['cor-borda', 'cor-fundo', NAO_TEXTO],
   ['cor-borda', 'cor-superficie', NAO_TEXTO],
 ]
 
-/*
- * Foco em duas cores (fundo amarelo + barra escura). Em cada fundo onde pode haver um elemento
- * focado, pelo menos uma das duas precisa ter 3:1: o amarelo nos fundos escuros, a barra nos claros.
- */
 const FUNDOS_COM_FOCO = ['cor-fundo', 'cor-superficie', 'cor-institucional']
 const TOKENS_DO_FOCO = ['cor-foco-fundo', 'cor-foco-barra']
 
-/** Linhas de separação: só enfeitam, não identificam nenhum controle (sem mínimo). */
 const DECORATIVOS = ['cor-separador']
 
-// Lido do disco: no Vitest, arquivos .css importados (mesmo com ?raw) viram texto vazio.
 const tokensCss = readFileSync(resolve(process.cwd(), 'src/styles/tokens.css'), 'utf8')
 const temas = lerTokensDeCor(tokensCss)
 const nomesTemas = Object.keys(temas)
@@ -62,7 +44,6 @@ describe('cálculo de contraste', () => {
   it('confere com valores conhecidos da WCAG', () => {
     expect(razaoContraste('#000000', '#ffffff')).toBeCloseTo(21, 5)
     expect(razaoContraste('#ffffff', '#ffffff')).toBeCloseTo(1, 5)
-    // #767676 sobre branco é o cinza mais claro que ainda passa em 4,5:1
     expect(razaoContraste('#767676', '#ffffff')).toBeGreaterThanOrEqual(4.5)
     expect(razaoContraste('#777777', '#ffffff')).toBeLessThan(4.5)
   })

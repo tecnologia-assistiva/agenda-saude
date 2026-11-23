@@ -1,10 +1,3 @@
-/*
- * Base visual: serviço público sóbrio e utilitário. Hierarquia por títulos e espaçamento,
- * sem cartões nem sombras. Tudo em rem/em para acompanhar o tamanho do texto escolhido
- * (o <html> recebe font-size em % do padrão do navegador; ver stores/configuracoes.ts).
- * Cores só por var(--cor-...), definidas em tokens.css.
- */
-
 :root {
   --fonte-texto: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", Ubuntu, Arial, sans-serif;
   --altura-linha: 1.5;
@@ -17,7 +10,7 @@
   --espaco-5: 1.5rem;
   --espaco-6: 2rem;
   --espaco-7: 3rem;
-  --alvo-minimo: 2.75rem; /* 44 px com o texto em 100% */
+  --alvo-minimo: 2.75rem;
   --contorno-foco: 0.1875rem;
   --largura-pagina: 60rem;
   --largura-leitura: 40rem;
@@ -39,7 +32,6 @@
 html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
-  /* Reforço do 2.4.11: o cabeçalho não é fixo, mas o foco nunca encosta na borda da tela. */
   scroll-padding-block: var(--espaco-6);
 }
 
@@ -53,8 +45,6 @@ body {
   font-family: var(--fonte-texto);
   font-size: 1rem;
   line-height: var(--altura-linha);
-  /* "anywhere" (e não só "break-word"): uma palavra longa também pode quebrar dentro de itens flex
-     e de botões, então nada passa da largura da tela com texto em 200% e espaçamento ampliado. */
   overflow-wrap: break-word;
   overflow-wrap: anywhere;
 }
@@ -70,8 +60,6 @@ body {
   flex: 1;
   flex-direction: column;
 }
-
-/* ---------- Tipografia ---------- */
 
 h1,
 h2,
@@ -139,8 +127,6 @@ li + li {
   max-width: var(--largura-leitura);
 }
 
-/* ---------- Links ---------- */
-
 a {
   color: var(--cor-link);
   text-decoration: underline;
@@ -151,11 +137,6 @@ a {
 a:hover {
   text-decoration-thickness: max(3px, 0.1875rem, 0.12em);
 }
-
-/* ---------- Foco: fundo amarelo, texto escuro e barra escura embaixo ----------
- * O amarelo contrasta com fundos escuros e a barra com fundos claros, então o foco aparece
- * em qualquer tema. O outline transparente vira contorno visível no modo de cores forçadas.
- */
 
 :focus-visible {
   outline: var(--contorno-foco) solid var(--cor-foco-barra);
@@ -175,13 +156,10 @@ a:focus-visible {
   box-decoration-break: clone;
 }
 
-/* Destinos dos links de pulo e o h1 da troca de rota recebem foco por script; não são controles. */
 [tabindex="-1"]:focus {
   outline: none;
   box-shadow: none;
 }
-
-/* ---------- Utilidades e layout ---------- */
 
 .visualmente-oculto:not(:focus):not(:active) {
   position: absolute;
@@ -192,7 +170,6 @@ a:focus-visible {
   white-space: nowrap;
 }
 
-/* Faixas (cabeçalho, menu, rodapé) ocupam a largura toda; o conteúdo delas fica alinhado aqui. */
 .container {
   width: 100%;
   max-width: calc(var(--largura-pagina) + 2 * var(--margem-lateral));
@@ -205,11 +182,6 @@ a:focus-visible {
   height: 1.1em;
   flex-shrink: 0;
 }
-
-/* ---------- Botões ----------
- * Retangulares e sem ícone. Um só botão principal (.botao) por tela; ações secundárias são
- * links, ou .botao--secundario quando a ação não navega.
- */
 
 button,
 input,
@@ -254,7 +226,6 @@ textarea {
   text-decoration: underline;
 }
 
-/* Botão de início de serviço: maior, para ser o primeiro ponto de atenção da página. */
 .botao--inicio {
   padding: var(--espaco-3) var(--espaco-5);
   font-size: 1.25em;
@@ -269,7 +240,6 @@ textarea {
   text-decoration: none;
 }
 
-/* Linha de ações (botões e links lado a lado; quebram linha em tela estreita). */
 .acoes {
   display: flex;
   flex-wrap: wrap;
@@ -277,8 +247,6 @@ textarea {
   gap: var(--espaco-3) var(--espaco-5);
   margin-bottom: var(--espaco-paragrafo);
 }
-
-/* ---------- Grupos de opções (radio e checkbox nativos) ---------- */
 
 fieldset {
   min-width: 0;
@@ -310,7 +278,6 @@ legend > h3 {
   gap: var(--espaco-2) var(--espaco-5);
 }
 
-/* O rótulo inteiro é a área de toque (pelo menos 44 px de altura). */
 .opcao {
   display: flex;
   align-items: flex-start;
@@ -340,7 +307,6 @@ legend > h3 {
   color: var(--cor-texto-suave);
 }
 
-/* Foco na opção: a linha inteira fica amarela, como nos links. */
 @supports selector(:has(*)) {
   .opcao:has(input:focus-visible) {
     outline: var(--contorno-foco) solid transparent;
@@ -360,10 +326,6 @@ legend > h3 {
   }
 }
 
-/* ---------- Etapas: legenda "Etapa X de 5" dentro do h1 ----------
- * Na tela estreita aparece (o indicador de etapas some); na larga fica só para o leitor de tela.
- */
-
 .legenda-etapa {
   display: block;
   margin-bottom: var(--espaco-1);
@@ -382,8 +344,6 @@ legend > h3 {
     white-space: nowrap;
   }
 }
-
-/* ---------- Campos de texto ---------- */
 
 .campo {
   margin-bottom: var(--espaco-6);
@@ -423,7 +383,6 @@ legend > h3 {
   border-radius: 0;
   background-color: var(--cor-fundo);
   color: var(--cor-texto);
-  /* Pelo menos 16 px: o iPhone não dá zoom ao focar. */
   font-size: max(1rem, 16px);
 }
 
@@ -439,7 +398,6 @@ legend > h3 {
   max-width: 30em;
 }
 
-/* Foco do campo: contorno amarelo por fora + borda escura grossa por dentro. */
 .campo__entrada:focus {
   outline: var(--contorno-foco) solid var(--cor-foco-fundo);
   outline-offset: 0;
@@ -449,8 +407,6 @@ legend > h3 {
 .campo--erro .campo__entrada {
   border-color: var(--cor-erro);
 }
-
-/* ---------- Resumo de erros ---------- */
 
 .resumo-erros {
   margin-bottom: var(--espaco-6);
@@ -486,15 +442,10 @@ legend > h3 {
   color: var(--cor-foco-texto);
 }
 
-/* ---------- Texto de atenção ---------- */
-
 .texto-atencao {
   font-weight: 700;
 }
 
-/* ---------- Teclas e tabelas ---------- */
-
-/* inline (não inline-block) para quebrar linha em tela estreita com texto grande. */
 kbd {
   padding: 0 var(--espaco-1);
   -webkit-box-decoration-break: clone;
@@ -530,11 +481,6 @@ th {
   font-weight: 700;
 }
 
-/* ---------- Impressão (comprovante da confirmação) ----------
- * Só o conteúdo: sem cabeçalho (barra eMAG, faixa, menu), rodapé, indicador de etapas e botões.
- * As cores do papel ficam em tokens.css (sempre o tema claro).
- */
-
 .so-impressao {
   display: none;
 }
@@ -559,8 +505,6 @@ th {
     display: none;
   }
 }
-
-/* ---------- Modo de cores forçadas (Windows) ---------- */
 
 @media (forced-colors: active) {
   :focus-visible,

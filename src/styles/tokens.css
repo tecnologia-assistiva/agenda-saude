@@ -1,13 +1,3 @@
-/*
- * Tokens de cor dos 3 temas. O claro é o design principal; escuro e alto contraste derivam dele.
- * Regras:
- * - só valores hexadecimais (tests/unit/contraste.spec.ts calcula o contraste de cada par);
- * - todo tema define os mesmos tokens;
- * - componentes usam só var(--cor-...), nunca uma cor direta.
- * Texto: pelo menos 4,5:1. Bordas de controles: pelo menos 3:1.
- * Foco: fundo amarelo + barra escura; em qualquer fundo, uma das duas tem pelo menos 3:1.
- */
-
 :root,
 :root[data-tema="claro"] {
   color-scheme: light;
@@ -16,7 +6,6 @@
   --cor-texto: #1b1b1b;
   --cor-texto-suave: #50575e;
   --cor-link: #1d4370;
-  /* Cor institucional da UBS: faixa do cabeçalho e botão principal. */
   --cor-institucional: #1d4370;
   --cor-texto-institucional: #ffffff;
   --cor-botao-fundo: #1d4370;
@@ -24,7 +13,6 @@
   --cor-botao-texto: #ffffff;
   --cor-botao-borda: #1d4370;
   --cor-borda: #5f666d;
-  /* Decorativo (linhas de separação): sem mínimo de contraste. */
   --cor-separador: #b1b4b6;
   --cor-foco-fundo: #ffd60a;
   --cor-foco-texto: #111111;
@@ -55,7 +43,6 @@
   --cor-sucesso: #7fd99a;
 }
 
-/* Preto e amarelo. Os blocos se separam por linhas amarelas; botões são contornados. */
 :root[data-tema="alto-contraste"] {
   color-scheme: dark;
   --cor-fundo: #000000;
@@ -78,10 +65,6 @@
   --cor-sucesso: #ffff00;
 }
 
-/*
- * Impressão: texto escuro no papel branco em qualquer tema (amarelo do alto contraste sumiria no
- * papel). ":root:root" fica depois dos temas e com o mesmo peso, então vence; não é um tema novo.
- */
 @media print {
   :root:root {
     color-scheme: light;

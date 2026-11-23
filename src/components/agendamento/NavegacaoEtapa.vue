@@ -1,9 +1,4 @@
 <script setup lang="ts">
-/*
- * Ações no fim de cada etapa: o botão principal (envia o formulário) e "Voltar" como link,
- * porque só navega. Quem veio da revisão por "Alterar" (?retorno=revisao) volta para ela.
- * `textoBotao` troca o "Continuar" (na revisão: "Confirmar agendamento").
- */
 import { computed } from 'vue'
 import { useRoute, type RouteLocationRaw } from 'vue-router'
 import { RETORNO_REVISAO, etapa } from '@/router/etapas'

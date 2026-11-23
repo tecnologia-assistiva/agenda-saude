@@ -13,8 +13,7 @@
     "test:watch": "vitest",
     "lint": "eslint .",
     "typecheck": "vue-tsc --build",
-    "e2e": "BASE_PATH=/agenda-saude/ vite build && playwright test",
-    "prints": "vite build && node scripts/prints.mjs"
+    "e2e": "BASE_PATH=/agenda-saude/ vite build && playwright test"
   },
   "engines": {
     "node": ">=22.12.0"

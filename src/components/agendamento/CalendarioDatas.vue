@@ -1,17 +1,4 @@
 <script setup lang="ts">
-/*
- * Calendário no padrão de grade de datas do WAI-ARIA APG ("Date Picker Dialog"), exibido na página.
- * - <table role="grid">; um único ponto de Tab (tabindex móvel: só o dia com foco tem tabindex="0").
- * - Setas mudam o dia; Home/End vão ao início/fim da semana; PageUp/PageDown, ao mês anterior/próximo;
- *   Enter ou Espaço escolhem (comportamento nativo do <button>).
- * - Adaptação ao APG: o foco fica num <button> dentro de cada célula, porque o VoiceOver e o Controle
- *   Assistivo do iPhone só acionam com segurança elementos nativos. Por isso o estado vai também no
- *   nome do botão: "quarta-feira, 25 de novembro, selecionado, 4 horários livres". A célula escolhida
- *   recebe aria-selected e o dia de hoje, aria-current="date".
- * - Dia sem vaga: aria-disabled, riscado (forma, não só cor) e "sem horários" no nome.
- * - Escolher o dia não move o foco; a região de status anuncia quantos horários livres ele tem.
- * - O título do mês é uma região live: trocar de mês é anunciado.
- */
 import { computed, nextTick, ref, useId, watch } from 'vue'
 import { useAnunciador } from '@/composables/useAnunciador'
 import {
@@ -34,14 +21,10 @@ import {
 
 const props = withDefaults(
   defineProps<{
-    /** AAAA-MM-DD de hoje. */
     hoje: string
-    /** Último dia que pode ter horário (o mês dele é o último que dá para abrir). */
     fim: string
-    /** Quantos horários livres cada dia tem (dias fora do mapa: nenhum). */
     livresPorDia: Map<string, number>
     erro?: string
-    /** id da tabela, para o link do resumo de erros. */
     id?: string
   }>(),
   { erro: undefined, id: 'calendario' },
@@ -77,7 +60,6 @@ function primeiroDiaLivre(mes: MesAno): string | null {
   return null
 }
 
-/** O foco nunca sai dos meses que podem ter horário. */
 function limitar(data: string): string {
   const minimo = primeiroDia(mesMinimo.value)
   const maximo = ultimoDia(mesMaximo.value)
@@ -96,7 +78,6 @@ function dataInicial(): string {
 const dataComFoco = ref(dataInicial())
 const mesExibido = ref<MesAno>(mesDe(dataComFoco.value))
 
-// Escolha feita fora do calendário (ex.: na lista de próximos horários): o calendário acompanha.
 watch(modelo, (nova) => {
   if (nova && nova !== dataComFoco.value) {
     dataComFoco.value = limitar(nova)
@@ -138,7 +119,6 @@ function aoTeclar(evento: KeyboardEvent, data: string) {
   moverFoco(calcular(data))
 }
 
-/** Botões de mês: o foco fica no botão; o dia "tabulável" passa para o mês novo. */
 function mudarMes(delta: -1 | 1) {
   if (delta < 0 ? !podeVoltar.value : !podeAvancar.value) return
   const novoMes = somarMeses(mesExibido.value, delta)
@@ -156,7 +136,6 @@ function escolher(data: string) {
   modelo.value = data
 }
 
-/** Texto do botão: o número do dia fica visível; o resto, só para o leitor de tela. */
 function partesDoNome(data: string) {
   const quantidade = livres(data)
   const estado = [
@@ -274,7 +253,6 @@ const descritoPor = computed(() => [idLegenda, props.erro ? idErro : null].filte
   gap: var(--espaco-2);
 }
 
-/* Desativado: borda tracejada (forma, não só cor; vale também no alto contraste). */
 .calendario__navegacao .botao[aria-disabled='true'] {
   border-style: dashed;
   border-color: var(--cor-separador);
@@ -291,7 +269,6 @@ const descritoPor = computed(() => [idLegenda, props.erro ? idErro : null].filte
   border-collapse: collapse;
 }
 
-/* Tela estreita: a grade usa a largura toda da tela, para cada dia ter pelo menos 44 px. */
 @media (max-width: 39.9375em) {
   .calendario__grade {
     width: calc(100% + 2 * var(--margem-lateral));
@@ -320,7 +297,6 @@ const descritoPor = computed(() => [idLegenda, props.erro ? idErro : null].filte
   width: 100%;
   min-height: var(--alvo-minimo);
   padding: 0;
-  /* Borda da cor do fundo: separa visualmente os dias sem diminuir a área de toque. */
   border: 0.125rem solid var(--cor-fundo);
   background-color: transparent;
   color: var(--cor-texto-suave);
@@ -337,14 +313,12 @@ const descritoPor = computed(() => [idLegenda, props.erro ? idErro : null].filte
   cursor: pointer;
 }
 
-/* Escolhido: preenchido com a cor de link (no alto contraste, amarelo com número preto). */
 .calendario__dia--selecionado {
   background-color: var(--cor-link);
   box-shadow: inset 0 0 0 0.125rem var(--cor-link);
   color: var(--cor-fundo);
 }
 
-/* Hoje: um traço embaixo do número. */
 .calendario__dia--hoje::after {
   content: '';
   position: absolute;
@@ -362,7 +336,6 @@ const descritoPor = computed(() => [idLegenda, props.erro ? idErro : null].filte
   color: var(--cor-foco-texto);
 }
 
-/* Selecionado e com foco: amarelo com borda escura inteira, para continuar diferente do foco comum. */
 .calendario__dia--selecionado:focus-visible {
   box-shadow: inset 0 0 0 0.25rem var(--cor-foco-barra);
 }

@@ -1,10 +1,4 @@
 <script setup lang="ts">
-/*
- * Etapa 5: confirmação. O h1 já diz que deu certo ("Consulta agendada" ou "Consulta remarcada") e
- * recebe o foco na troca de rota. Mostra o protocolo e o resumo, com:
- * - "Imprimir comprovante": o CSS de impressão tira cabeçalho, menu, barra eMAG, rodapé e botões;
- * - "Adicionar à agenda": link que baixa o .ics (servicos/calendario-ics.ts).
- */
 import { computed, onMounted } from 'vue'
 import { definirTituloDocumento } from '@/router/foco-rota'
 import { legendaDaEtapa } from '@/router/etapas'
@@ -38,7 +32,6 @@ const itens = computed<ItemResumo[]>(() => {
 const enderecoIcs = computed(() => (consulta.value ? enderecoDoIcs(consulta.value) : undefined))
 const nomeArquivo = computed(() => (consulta.value ? nomeDoArquivoIcs(consulta.value) : undefined))
 
-// O título da aba também diz que deu certo (a rota só sabe "Confirmação").
 onMounted(() => definirTituloDocumento(`${legendaDaEtapa(5)}: ${titulo.value}`))
 
 function imprimir() {

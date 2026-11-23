@@ -8,8 +8,6 @@ import {
   normalizarTelefone,
 } from '@/utils/formatacao'
 
-/* Colar em qualquer formato: o campo aceita e formata ao sair (nunca durante a digitação). */
-
 describe('data colada em vários formatos', () => {
   it.each([
     ['15/03/1980', '15/03/1980'],

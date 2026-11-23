@@ -1,9 +1,4 @@
 <script setup lang="ts">
-/*
- * Ícones só onde carregam informação que o texto não dá (por exemplo, o ✓ que mostra que
- * "Alto contraste" está ligado). Sempre aria-hidden: o estado ou o nome vêm do HTML/ARIA.
- * Usam currentColor, então seguem o tema e o modo de cores forçadas.
- */
 import { computed } from 'vue'
 
 export type NomeIcone = 'check'

@@ -1,11 +1,4 @@
 <script setup lang="ts" generic="T extends string | number">
-/*
- * Grupo de radios nativos: fieldset + legend, setas trocam a opção (comportamento do navegador).
- * O rótulo inteiro é a área de toque, com pelo menos 44 px de altura.
- * Com `nivelTitulo`, a legenda vira também um título (h2/h3) para quem navega por títulos.
- * Com `erro`: a mensagem fica logo depois da legenda, ligada ao grupo por aria-describedby, e cada
- * radio recebe aria-invalid. O `id` vai no fieldset, para o link do resumo de erros.
- */
 import { computed, useId } from 'vue'
 
 export interface Opcao<V> {

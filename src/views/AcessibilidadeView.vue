@@ -1,14 +1,8 @@
 <script setup lang="ts">
-/*
- * Declaração de acessibilidade (versão final): conformidade, data e método da avaliação, recursos,
- * atalhos, a adaptação do calendário, limitações conhecidas e como relatar um problema.
- * A situação ("parcialmente conforme") é revista depois da avaliação manual (docs/avaliacao-wcag.md).
- */
 import TituloPagina from '@/components/comum/TituloPagina.vue'
 
 const REPOSITORIO = 'https://github.com/tecnologia-assistiva/agenda-saude'
 const ENDERECO_CHAMADOS = `${REPOSITORIO}/issues`
-const ENDERECO_RELATORIO = `${REPOSITORIO}/blob/main/docs/avaliacao-wcag.md`
 </script>
 
 <template>
@@ -29,7 +23,6 @@ const ENDERECO_RELATORIO = `${REPOSITORIO}/blob/main/docs/avaliacao-wcag.md`
       </li>
       <li>Manual: com NVDA no Windows, VoiceOver e Controle Assistivo no iPhone, e só com teclado.</li>
     </ul>
-    <p><a :href="ENDERECO_RELATORIO">Veja o relatório de avaliação</a>.</p>
 
     <h2>Recursos</h2>
     <ul>

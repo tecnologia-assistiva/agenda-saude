@@ -6,7 +6,6 @@ import { gerarProtocolo, useConsultasStore, type NovaConsulta } from '@/stores/c
 import { consulta, lerConsultasSalvas, salvarConsultas, salvarDadosPessoais } from './ajuda/consultas'
 import { DADOS_VALIDOS, salvarRascunho } from './ajuda/rascunho'
 
-/* Data fixa: quarta-feira, 18/11/2026. */
 beforeEach(() => {
   vi.useFakeTimers({ toFake: ['Date'], shouldAdvanceTime: true })
   vi.setSystemTime(new Date(2026, 10, 18, 10, 0))
@@ -34,7 +33,6 @@ describe('store de consultas', () => {
     expect(lerConsultasSalvas()).toEqual([criada])
     expect(consultas.dadosSalvos).toEqual(DADOS_VALIDOS)
     expect(consultas.confirmacaoAtual).toEqual({ consulta: criada, tipo: 'agendada' })
-    // Numa nova sessão (recarregar a página), tudo continua lá.
     const depois = novaSessao().consultas
     expect(depois.buscar(criada.protocolo)).toEqual(criada)
     expect(depois.dadosSalvos).toEqual(DADOS_VALIDOS)
@@ -134,7 +132,6 @@ describe('rascunho + consultas', () => {
     const { agendamento } = novaSessao()
     expect(agendamento.etapaCompleta(3)).toBe(false)
     expect(horariosParaEscolha('2026-11-18', 'clinica-geral', 'helena-duarte', agendamento.horariosOcupados)[0]).toEqual(segundo)
-    // Remarcando essa mesma consulta, o horário dela continua valendo.
     agendamento.rascunho.remarcando = '1234-5678'
     expect(agendamento.etapaCompleta(3)).toBe(true)
   })

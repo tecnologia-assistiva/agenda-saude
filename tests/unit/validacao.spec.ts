@@ -7,7 +7,7 @@ import {
   validarTelefone,
 } from '@/utils/validacao'
 
-const HOJE = new Date(2026, 10, 18) // 18/11/2026
+const HOJE = new Date(2026, 10, 18)
 const NUMERO_ERRADO =
   'Confira o número: celular tem 9 números e começa com 9; fixo tem 8 e começa com 2, 3, 4 ou 5.'
 

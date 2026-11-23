@@ -1,10 +1,4 @@
 <script setup lang="ts">
-/*
- * Menu principal: links simples logo abaixo da faixa institucional.
- * Destino do atalho "Ir para o menu [2]" (id="menu", tabindex="-1").
- * Sem menu escondido: os itens quebram linha em telas estreitas.
- * aria-current: "page" na página exata; "true" na seção (ex.: "Agendar consulta" em qualquer etapa).
- */
 const itens = [
   { para: '/', texto: 'Início' },
   { para: '/agendar', texto: 'Agendar consulta' },
@@ -56,7 +50,6 @@ const itens = [
   border-bottom: 0.25rem solid transparent;
 }
 
-/* Página ou seção atual: negrito e barra embaixo (forma, não só cor). */
 .menu__link[aria-current] {
   border-bottom-color: var(--cor-link);
   font-weight: 700;

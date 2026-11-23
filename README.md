@@ -17,23 +17,8 @@ dia, como fazer formulários, um fluxo em etapas, um calendário e diálogos ace
 
 O app foi feito para funcionar com **NVDA** (Windows), **VoiceOver** e **Controle Assistivo** (iPhone) e
 **só com teclado**: o teclado e o axe são conferidos por testes automáticos, e os leitores de tela, na
-avaliação manual ([docs/avaliacao-wcag.md](docs/avaliacao-wcag.md)). O visual é sóbrio, de serviço público (inspirado no GOV.UK, sem copiar marca ou fonte):
+avaliação manual. O visual é sóbrio, de serviço público (inspirado no GOV.UK, sem copiar marca ou fonte):
 uma tarefa por tela, texto curto e linguagem simples.
-
-## Capturas de tela
-
-| | |
-|---|---|
-| <img src="docs/prints/01-inicio-claro.webp" width="400" alt="Tela inicial: título Agendar consulta, uma frase e o botão Começar agendamento."> | <img src="docs/prints/03-erros-claro.webp" width="400" alt="Etapa 1 com o resumo Corrija 3 problemas para continuar no topo, e cada campo com a mensagem de erro em vermelho."> |
-| Início | Etapa 1 com erros |
-| <img src="docs/prints/05-calendario-claro.webp" width="400" alt="Etapa 3: calendário de novembro com o dia 19 escolhido, dias sem vaga riscados e a lista de horários do dia."> | <img src="docs/prints/06-revisao-escuro.webp" width="400" alt="Revisão no tema escuro: blocos Seus dados, Tipo de atendimento e Data e horário, cada um com o link Alterar."> |
-| Calendário com dia escolhido | Revisão (tema escuro) |
-| <img src="docs/prints/07-confirmacao-claro.webp" width="400" alt="Confirmação: título Consulta agendada, protocolo, resumo e os botões Imprimir comprovante e Adicionar à agenda."> | <img src="docs/prints/09-cancelar-consulta-claro.webp" width="400" alt="Diálogo Cancelar esta consulta? sobre a lista, com os botões Não, manter consulta e Sim, cancelar consulta."> |
-| Confirmação | Diálogo de cancelar |
-| <img src="docs/prints/08-minhas-consultas-alto-contraste.webp" width="400" alt="Minhas consultas no tema alto contraste: texto amarelo sobre fundo preto, com duas consultas e os botões Remarcar e Cancelar."> | <img src="docs/prints/05-calendario-claro-celular.webp" width="200" alt="Calendário no celular: a grade ocupa a largura toda da tela."> |
-| Minhas consultas (alto contraste) | Celular |
-
-As capturas são geradas com `npm run prints` (todas ficam em `docs/prints/todas/`, fora do Git).
 
 ## Funcionalidades
 
@@ -75,8 +60,6 @@ As capturas são geradas com `npm run prints` (todas ficam em `docs/prints/todas
 | Nome acessível começa pelo texto visível ("Cancelar a consulta de…"). | 2.5.3, 2.4.4 |
 | Sem tempo limite e sem CAPTCHA. | 2.2.1 |
 
-A avaliação completa, critério por critério, está em [docs/avaliacao-wcag.md](docs/avaliacao-wcag.md).
-
 ## Como rodar
 
 Precisa do Node 22.12 ou mais novo.
@@ -96,7 +79,6 @@ A publicação é automática na branch `main` (`.github/workflows/deploy.yml`).
 npm test           # unitários (Vitest + jsdom)
 npm run lint       # ESLint, com regras de acessibilidade para Vue
 npm run e2e        # e2e (Playwright + axe) contra o build de produção
-npm run prints     # capturas de tela (não é teste)
 ```
 
 Na primeira vez, instale o navegador dos e2e: `npx playwright install chromium` (no Linux ou WSL, com
@@ -129,15 +111,10 @@ src/
 tests/
   unit/         Vitest
   e2e/          Playwright + axe
-scripts/        prints.mjs (capturas de tela)
-docs/           avaliação WCAG, personas, roteiro do vídeo e capturas
 ```
 
 ## Documentação
 
-- [Avaliação WCAG 2.2, eMAG e heurísticas](docs/avaliacao-wcag.md)
-- [Personas](docs/personas.md)
-- [Roteiro do vídeo](docs/roteiro-video.md)
 - Página [Sobre a acessibilidade](https://tecnologia-assistiva.github.io/agenda-saude/acessibilidade) (declaração no próprio site)
 
 ## Limitações
@@ -149,8 +126,7 @@ docs/           avaliação WCAG, personas, roteiro do vídeo e capturas
 - Em 320 px com texto em 200% e espaçamento ampliado, palavras longas como "Configurações" podem quebrar no
   meio (não há rolagem horizontal).
 - O `.ics` usa a hora local do aparelho, sem fuso.
-- Os testes automáticos encontram só uma parte dos problemas; a avaliação manual está em
-  [docs/avaliacao-wcag.md](docs/avaliacao-wcag.md).
+- Os testes automáticos encontram só uma parte dos problemas.
 
 ## Créditos e licenças
 

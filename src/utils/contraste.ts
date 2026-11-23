@@ -1,8 +1,3 @@
-/**
- * Cálculo de contraste da WCAG 2.x (luminância relativa e razão de contraste).
- * Usado pelo teste que confere os tokens de cor de cada tema (tests/unit/contraste.spec.ts).
- */
-
 export type TokensPorTema = Record<string, Record<string, string>>
 
 export function hexParaRgb(hex: string): [number, number, number] {
@@ -38,10 +33,6 @@ export function razaoContraste(corA: string, corB: string): number {
   return (clara + 0.05) / (escura + 0.05)
 }
 
-/**
- * Lê os blocos `:root[data-tema="..."] { --cor-x: #hex; }` de um CSS e devolve os tokens de cada tema.
- * Só aceita valores hexadecimais, para o teste poder calcular o contraste de todos.
- */
 export function lerTokensDeCor(css: string): TokensPorTema {
   const semComentarios = css.replace(/\/\*[\s\S]*?\*\//g, '')
   const temas: TokensPorTema = {}

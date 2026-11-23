@@ -1,11 +1,4 @@
 <script setup lang="ts">
-/*
- * Indicador de etapas: lista ordenada com o texto "Etapa X de 5" em cada item e
- * aria-current="step" na atual. Etapas concluídas mostram "concluída" (texto, não só cor) e são
- * links para voltar a elas. O nome acessível de cada link começa pelo texto visível (2.5.3).
- * Em tela estreita a lista some: a legenda "Etapa X de 5" do h1 cumpre o papel sem ocupar espaço.
- * Na confirmação, as 4 anteriores aparecem concluídas, mas sem link (o rascunho já foi apagado).
- */
 import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
 import { ETAPAS, TOTAL_ETAPAS } from '@/router/etapas'
@@ -60,7 +53,6 @@ const itens = computed(() =>
   }
 
   .etapas__item {
-    /* Base em rem: com texto grande, os itens quebram em mais linhas em vez de transbordar. */
     flex: 1 1 9rem;
     margin: 0;
   }

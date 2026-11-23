@@ -4,8 +4,6 @@ import { montarApp, navegar } from './ajuda/montar-app'
 import { salvarDadosPessoais } from './ajuda/consultas'
 import { DADOS_VALIDOS, lerRascunhoSalvo, salvarRascunho } from './ajuda/rascunho'
 
-/* Novo agendamento com os dados pessoais do último (WCAG 3.3.7) e "Apagar meus dados". */
-
 const texto = (el: Element | null | undefined) => el?.textContent?.replace(/\s+/g, ' ').trim()
 const valor = (id: string) => (document.getElementById(id) as HTMLInputElement).value
 const botao = (inicio: string) =>
@@ -26,7 +24,6 @@ describe('dados do último agendamento', () => {
     expect(valor('telefone')).toBe(DADOS_VALIDOS.telefone)
     expect(texto(document.querySelector('.dados-salvos p'))).toBe('Usamos os dados do seu último agendamento.')
     expect(botao('Apagar meus dados').type).toBe('button')
-    // Dá para seguir direto.
     document.querySelector('main form')?.dispatchEvent(new Event('submit', { cancelable: true }))
     await expect.poll(() => router.currentRoute.value.path).toBe('/agendar/atendimento')
   })

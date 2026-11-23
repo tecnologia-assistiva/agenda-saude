@@ -1,20 +1,9 @@
 <script setup lang="ts">
-/*
- * Diálogo de confirmação com <dialog> nativo aberto por showModal(): o navegador deixa o resto da
- * página inerte, prende o Tab no diálogo e fecha com Esc. Nome = título (aria-labelledby); o texto
- * vai no aria-describedby, para o leitor de tela ler junto ao abrir.
- * - O foco começa na opção segura (`manter`), que vem primeiro e é o botão principal.
- * - Ao fechar (por um botão ou Esc), o foco volta para quem abriu. Se esse elemento sumiu (a
- *   consulta cancelada saiu da lista), vai para o h1 da página.
- * Uso: `dialogo.abrir(evento.currentTarget)`; a ação vem no evento `confirmar`.
- */
 import { nextTick, ref, useId } from 'vue'
 
 defineProps<{
   titulo: string
-  /** Texto do botão que faz a ação, por exemplo "Sim, cancelar consulta". */
   confirmar: string
-  /** Texto do botão que desiste, por exemplo "Não, manter consulta". */
   manter: string
 }>()
 const emit = defineEmits<{ confirmar: [] }>()
@@ -30,10 +19,8 @@ let confirmou = false
 async function abrir(quemAbriu?: EventTarget | null): Promise<void> {
   const elemento = dialogo.value
   if (!elemento || elemento.open) return
-  // No Safari, clicar num botão não dá foco a ele: por isso quem chama passa o botão.
   origem = quemAbriu instanceof HTMLElement ? quemAbriu : (document.activeElement as HTMLElement | null)
   confirmou = false
-  // O texto pode depender do que acabou de ser escolhido (qual consulta): espera ele aparecer.
   await nextTick()
   elemento.showModal()
   botaoManter.value?.focus()
@@ -44,7 +31,6 @@ function fechar(confirmar: boolean): void {
   dialogo.value?.close()
 }
 
-/** Evento close: vale para os botões e para o Esc. */
 async function aoFechar(): Promise<void> {
   if (confirmou) emit('confirmar')
   confirmou = false
@@ -71,11 +57,6 @@ defineExpose({ abrir })
 </template>
 
 <style scoped>
-/*
- * Borda grossa em vez de sombra; o fundo da página fica esmaecido na cor do próprio tema.
- * Na tela estreita, quase toda a largura e recuo menor: com texto em 200% sobra espaço para as palavras.
- * Se não couber na altura, o próprio diálogo rola (max-height do navegador).
- */
 .dialogo {
   width: calc(100% - 2 * var(--espaco-2));
   max-width: 34rem;

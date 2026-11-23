@@ -10,11 +10,6 @@ import {
   rolagemHorizontal,
 } from './ajuda'
 
-/*
- * WCAG 1.4.10 (reflow): em 320 px de largura nenhuma tela rola na horizontal, nem com texto em 200%
- * e espaçamento ampliado ligados pela tela de Configurações (mais exigente que o critério).
- */
-
 test.use({ viewport: { width: 320, height: 640 } })
 
 async function semRolagem(page: Page, tela: string) {
@@ -22,7 +17,6 @@ async function semRolagem(page: Page, tela: string) {
   expect(excesso, `${tela}: passa ${excesso}px da largura. Culpados: ${culpados.join(' || ')}`).toBeLessThanOrEqual(0)
 }
 
-/** Visita todas as rotas (e os estados que mudam a largura) conferindo a rolagem. */
 async function visitarTudo(page: Page) {
   for (const [rota, tela] of [
     ['./', 'início'],

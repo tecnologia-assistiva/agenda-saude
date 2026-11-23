@@ -115,7 +115,6 @@ describe('barra de acessibilidade (eMAG)', () => {
     for (const atalho of atalhos) {
       const prefixo = atalho.querySelector('.atalho__prefixo')
       expect(prefixo?.textContent).toBe('Ir para o ')
-      // O prefixo fica só visualmente escondido (continua no DOM e no nome), nunca aria-hidden.
       expect(prefixo?.closest('[aria-hidden]')).toBeNull()
       const alvo = atalho.querySelector('.atalho__alvo')?.textContent ?? ''
       expect(atalho.textContent?.toLowerCase()).toContain(alvo)

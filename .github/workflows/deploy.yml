@@ -1,6 +1,3 @@
-# Testes + build + e2e + publicação no GitHub Pages.
-# Em pull request: lint, testes, build e e2e. Na main (ou manualmente): o mesmo e, se tudo passar, publica.
-# Requer em Settings → Pages → "Build and deployment" → Source: "GitHub Actions".
 name: Testar e publicar
 
 on:
@@ -12,7 +9,6 @@ on:
 permissions:
   contents: read
 
-# Não interrompe uma publicação em andamento; em pull request, a execução nova substitui a antiga.
 concurrency:
   group: pages-${{ github.ref }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
@@ -33,14 +29,11 @@ jobs:
       - run: npm run lint
       - run: npm test
 
-      # O base path é o nome do repositório: /agenda-saude/
       - name: Build de produção
         run: npm run build
         env:
           BASE_PATH: /${{ github.event.repository.name }}/
 
-      # E2E contra esse mesmo build (axe, teclado, largura, foco, impressão e cores forçadas).
-      # Se falhar, o site não é publicado.
       - name: Instalar o Chromium do Playwright
         run: npx playwright install --with-deps chromium
 

@@ -33,10 +33,10 @@ describe('datas', () => {
 
   it('semanas do mês começam no domingo, com vazios nas pontas', () => {
     const novembro = semanasDoMes({ ano: 2026, mes: 11 })
-    expect(novembro[0]?.[0]).toBe('2026-11-01') // 1º de novembro de 2026 é domingo
+    expect(novembro[0]?.[0]).toBe('2026-11-01')
     expect(novembro).toHaveLength(5)
     const dezembro = semanasDoMes({ ano: 2026, mes: 12 })
-    expect(dezembro[0]?.slice(0, 3)).toEqual([null, null, '2026-12-01']) // começa numa terça
+    expect(dezembro[0]?.slice(0, 3)).toEqual([null, null, '2026-12-01'])
     expect(dezembro.every((semana) => semana.length === 7)).toBe(true)
   })
 

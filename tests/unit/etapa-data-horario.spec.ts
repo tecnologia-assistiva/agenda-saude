@@ -5,7 +5,6 @@ import { montarApp } from './ajuda/montar-app'
 import { consulta, salvarConsultas } from './ajuda/consultas'
 import { DADOS_VALIDOS, lerRascunhoSalvo, salvarRascunho } from './ajuda/rascunho'
 
-/* Data fixa: quarta-feira, 18/11/2026, 10h (o relógio continua andando a partir daí). */
 beforeEach(() => {
   vi.useFakeTimers({ toFake: ['Date'], shouldAdvanceTime: true })
   vi.setSystemTime(new Date(2026, 10, 18, 10, 0))

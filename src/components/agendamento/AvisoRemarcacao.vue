@@ -1,5 +1,4 @@
 <script setup lang="ts">
-/* Durante a remarcação, lembra qual consulta vai mudar (o protocolo continua o mesmo). */
 import { computed } from 'vue'
 import { descreverHorario } from '@/servicos/horarios'
 import { useAgendamentoStore } from '@/stores/agendamento'
